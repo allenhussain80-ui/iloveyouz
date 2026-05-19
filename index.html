@@ -2,17 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
   <title>Happy 7 Months ❤️</title>
 
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body {
-      margin: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
-      color: white; touch-action: none;
-    }
+ html, body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+
+  font-family: Arial, sans-serif;
+
+  background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
+
+  color: white;
+}
+
+.screen,
+#memoryPage,
+#loadingScreen {
+  min-height: 100dvh;
+}
+
+#easterEggHint {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 150;
+  font-size: 1.8rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
     #heartLayer {
       position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none;
     }
@@ -141,7 +165,8 @@
         width: min(980px, 96vw);
         max-width: 980px;
         max-height: 88vh; /* constrain modal height and scroll media inside */
-        overflow: hidden;
+        overflow-y: auto;
+overflow-x: hidden;
         border-radius: 22px;
         background: rgba(255,255,255,0.98);
         color: #c31864;
@@ -285,7 +310,9 @@
       text-align: center;
       background: rgba(255,255,255,0.22);
       border: 1px solid rgba(255,255,255,0.4);
-      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+backdrop-filter: blur(15px);
+
     }
 
     .loadingBar {
@@ -342,6 +369,69 @@
 
     .letterCard h2 { margin-top: 0; }
 
+    .loveLetterCard {
+  position: relative;
+  margin-top: 18px;
+  padding: 24px 22px 40px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 14px 40px rgba(130,0,70,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+  overflow: hidden;
+  text-align: center;
+}
+
+.loveLetterCard p {
+  color: #a11458;
+  font-size: 1rem;
+  line-height: 1.9;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.floatingHearts {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.floatingHearts span {
+  font-size: 1.3rem;
+  animation: floatHeart 2.6s ease-in-out infinite;
+}
+
+.floatingHearts span:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.floatingHearts span:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+.floatingHearts span:nth-child(4) {
+  animation-delay: 1.2s;
+}
+
+.floatingHearts span:nth-child(5) {
+  animation-delay: 1.6s;
+}
+
+@keyframes floatHeart {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
     /* Achievements Panel */
     #achievementPanel {
       position: fixed;
@@ -391,22 +481,7 @@
       overflow-y: auto; /* allow scrolling inside the overlay */
     }
 
-    .albumModal {
-      position: relative;
-      width: min(980px, 96vw);
-      max-width: 980px;
-      max-height: 88vh; /* constrain modal height and scroll media inside */
-      overflow: hidden;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.98);
-      color: #c31864;
-      padding: 18px;
-      box-shadow: 0 30px 80px rgba(70, 0, 50, 0.35);
-      transform-origin: center center;
-      animation: revealCard 0.35s ease;
-      display: flex;
-      flex-direction: column;
-    }
+    
 
     /* make modal content scroll internally while body stays fixed */
     .albumModal .albumContent {
@@ -456,11 +531,91 @@
 
     .albumModal.show { transform: scale(1); opacity: 1; }
     .albumModal.reverse-close { transform: scale(0.96); opacity: 0; }
+
+    #lightboxWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
+  background: rgba(10, 0, 30, 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+#lightboxWrap.show {
+  display: flex;
+}
+
+.lightboxContent {
+  position: relative;
+  width: min(96vw, 900px);
+  max-height: 92vh;
+  text-align: center;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+}
+
+.lightboxMedia {
+  max-width: 100%;
+  max-height: 82vh;
+  border-radius: 18px;
+  object-fit: contain;
+  background: #000;
+}
+
+.lightboxNav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.lightboxDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+}
+
+.lightboxDot.active {
+  background: white;
+}
+
+.confetti {
+  position: fixed;
+  z-index: 210;
+  pointer-events: none;
+}
+
+.easterEggModal {
+  width: min(92vw, 420px);
+  padding: 24px;
+  border-radius: 28px;
+  background: white;
+  color: #c31864;
+  text-align: center;
+}
+
     @media (max-width: 600px) { .albumGallery { grid-template-columns: 1fr; } }
   </style>
 </head>
 
 <body>
+
+  <audio id="bgMusic" loop>
+  <source src="background.mp3" type="audio/mpeg">
+</audio>
   <div id="heartLayer"></div>
 
   <div id="loadingScreen">
@@ -569,6 +724,7 @@
         </div>
       </div>
       <p id="monthParagraph"></p>
+      <div id="month7SpecialCard"></div>
       <span id="monthTheme" class="themeTag"></span>
       <div id="voiceMessageContainer"></div>
       <a id="monthSpotify" class="spotifyBtn" href="#" target="_blank">Open Playlist 🎧</a>
@@ -614,7 +770,7 @@
         image: "month1.jpg",
         paragraph: "This was where everything started feeling real. The beginning of us, the first memories, and the little moments that made me want to keep choosing you.",
         theme: "Theme: The Beginning",
-        spotify: "PASTE_MONTH_1_SPOTIFY_LINK_HERE",
+        spotify: "https://open.spotify.com/playlist/7a2fTPMg3XwYX4qfROaNW6?si=k_bomGc-Ta-Z-qVz8z__bw",
         voiceMessage: "month1.mp3",
         albumTitle: "Month 1 Album",
         albumItems: [
@@ -628,7 +784,7 @@
         image: "month2.jpg",
         paragraph: "This month felt like us slowly becoming more comfortable with each other. More laughs, more random talks, and more reasons for me to feel lucky.",
         theme: "Theme: Soft Era",
-        spotify: "PASTE_MONTH_2_SPOTIFY_LINK_HERE",
+        spotify: "https://open.spotify.com/playlist/4DEQos5sRM1qHnUyUimAz6?si=Mq-vtH5iQkO5HC5VPC0zxw",
         voiceMessage: "month2.mp3",
         albumTitle: "Month 2 Album",
         albumItems: [
@@ -647,7 +803,7 @@
         image: "month3.jpg",
         paragraph: "This month was lowk hell, like 5 weeks of long distance and barely seeing each other. But it also made me realize how much I cared, how much I wanted to make it work, and how much you meant to me even when we were apart despite the childish qauerlls we had on the daily, it pulled me closer to you.",
         theme: "Theme: Chaotic but in Love",
-        spotify: "PASTE_MONTH_3_SPOTIFY_LINK_HERE",
+        spotify: "https://open.spotify.com/playlist/0teTXH2rVZ6KW5H1TVQaI1?si=VWH1i1uvSmWTM2skdWoo3g",
         voiceMessage: "month3.mp3",
         albumTitle: "Month 3 Album",
         albumItems: [
@@ -661,7 +817,7 @@
         video: "month4.mp4",
         paragraph: "When i finally returned to you after that long distance, it felt like coming back home. Like no matter how far we were, we still had that connection, that comfort, and that feeling of belonging with each other.And like bro I cld finally feel the warmth of ur skin which i was craving for WEEKS and that truly comforted me",
         theme: "Theme: Comfort",
-        spotify: "PASTE_MONTH_4_SPOTIFY_LINK_HERE",
+        spotify: "https://open.spotify.com/playlist/5tjQLxLrchcbQ7QXBgQsL3?si=qcQxPC6PTginERF8iGiJsQ",
         voiceMessage: "month4.mp3",
         albumTitle: "Month 4 Album",
         albumItems: [
@@ -672,50 +828,99 @@
       },
       {
         title: "Month 5 — Through Everything ❤️‍🩹",
-        image: "month5.jpg",
+        video: "month5.mp4",
         paragraph: "This month reminded me that love is not only about perfect days. It is about staying, learning, fixing things, and still caring even when things get hard.",
-        theme: "Theme: Healing",
-        spotify: "PASTE_MONTH_5_SPOTIFY_LINK_HERE",
+        theme: "Theme: Like lowk jus chill but still love u",
+        spotify: "https://open.spotify.com/playlist/5kV5rTXdlOkg5qjylcogXA?si=YGPfV81gTj26gNMFMMWWPQ",
         voiceMessage: "month5.mp3",
         albumTitle: "Month 5 Album",
         albumItems: [
-          { type: "image", src: "images/month5-1.jpg", alt: "Memory 1" },
-          { type: "image", src: "images/month5-2.jpg", alt: "Memory 2" },
-          { type: "image", src: "images/month5-3.jpg", alt: "Memory 3" }
+          { type: "image", src: "month5-1.jpg", alt: "Memory 1" },
+          { type: "video", src: "month5-1.mp4", alt: "Memory 2" },
+          { type: "image", src: "month5-2.jpg", alt: "Memory 3" },
+          { type: "video", src: "month5-2.mp4", alt: "Memory 4" },
+          { type: "video", src: "month5-3.mp4", alt: "Memory 5" },
+          { type: "video", src: "month5-4.mp4", alt: "Memory 6" },
+          { type: "video", src: "month5-5.mp4", alt: "Memory 7" },
         ]
       },
       {
         title: "Month 6 — Still You 💕",
-        image: "month6.jpg",
+        image: "month6-8.jpeg",
         paragraph: "By this month, I already knew how much you meant to me. Even after all the time, it was still you I wanted to talk to, annoy, miss, and love.",
         theme: "Theme: Still Choosing You",
-        spotify: "PASTE_MONTH_6_SPOTIFY_LINK_HERE",
+        spotify: "https://open.spotify.com/playlist/6ZcdUokO7u5ULWDoIoYTqo?si=W3TdF9rlT6iBEAevwaj8aQ",
         voiceMessage: "month6.mp3",
         albumTitle: "Month 6 Album",
         albumItems: [
-          { type: "image", src: "images/month6-1.jpg", alt: "Memory 1" },
-          { type: "video", src: "videos/month6-1.mp4" }
+          { type: "image", src: "images/month6-1.jpeg", alt: "Memory 1" },
+
+          { type: "image", src: "images/month6-2.jpeg", alt: "Memory 2" },
+          
+          { type: "image", src: "images/month6-3.jpeg", alt: "Memory 3" },
+
+
+
+          { type: "image", src: "images/month6-5.jpeg", alt: "Memory 5" },
+
+          { type: "image", src: "images/month6-6.jpeg", alt: "Memory 6" },
+
+          { type: "image", src: "images/month6-7.jpeg", alt: "Memory 7" },
+
+          { type: "image", src: "images/month6-8.jpeg", alt: "Memory 8" },
+
+          { type: "image", src: "images/month6-9.jpeg", alt: "Memory 9" },
+
         ]
       },
       {
         title: "Month 7 — Right Now 💍",
-        image: "month7.jpg",
-        paragraph: "Seven months later, and you still mean so much to me. This is not just about how long we have been together, but about everything we built, survived, and became.",
+        image: "month7.jpeg",
+        paragraph: `bro reading all this honestly hurt me but in a good way 😭 like i genuinely didnt know how much was going on in ur head this whole time and i think i was so focused on what changed that i stopped seeing why things changed in the first place
+
+and first of all i need u to stop thinking i dont appreciate u because i genuinely do, like more than i even know how to explain sometimes. even when i get upset and start overthinking everything, i never forget everything u have done for me and how much love u gave me from the start. thats literally why i got so scared when things started feeling different because i knew how good we used to be and i missed it so badly
+
+and honestly bro im sorry too because i think i kept looking at the way things used to be instead of understanding that we both changed and our lives changed too. like at the start we literally had all day for each other and everything felt easy because we were constantly talking and obsessed with each other 24/7 😭 but now theres school, stress, family shit, being drained and everything else on top of the relationship and i think i kept taking it personally whenever u disappeared or got dry instead of realizing sometimes u genuinely just dont have energy
+
+and i understand what u mean now about ur friends too. i dont want u to lose everyone around u just because of me and i never wanted u to feel trapped or forced to only talk to me. i think i was just scared because i miss how close we used to be and whenever i felt u pulling away even a little my brain immediately started overthinking everything and making me feel like im losing u
+
+but bro after reading all this i know u still care 😭 like nobody writes allat while crying and annoyed if they dont genuinely love the person. and the thing u said about stalking my reposts and last seen and ur mood depending on us being okay lowk made me emotional because thats literally me too 😭 whenever we arent okay it ruins my whole mood and i start acting weird with everyone around me too
+
+and i never wanted u to think i dont notice ur effort. even if its not the exact same as the start, i still notice the small things u do and the fact ur even TRYING means sm to me because ik youve been drained and overwhelmed too. and honestly i think both of us let all the arguments slowly affect the way we act with each other without realizing it. like instead of feeling safe and soft sometimes we just started expecting another argument and it made both of us more tired
+
+but i dont wanna stay stuck like that bro 😭 because at the end of the day ur still the person i love the most and the person i wanna fix things with. like genuinely even after every argument and every overthinking episode its still always u for me
+
+and i need u to know smth too, when i say i dont feel loved sometimes it doesnt mean u dont love me. i know u do. i think i just miss feeling it the way i used to and i got scared because i care about us so much. but reading this reminded me that the love is still there, we just got comfortable and drained and caught up in life and arguments
+
+and honestly bro i dont even want the relationship to go back EXACTLY to how it was at the start because obviously the honeymoon phase isnt gonna stay forever 😭 but i do want us to find a healthier version of that closeness again. like where we still put effort, still reassure each other, still communicate properly, still make each other feel special even when life gets tiring
+
+and i really appreciate u opening up like this because i know u couldve just kept saying “okay” and ignored everything instead. the fact u wrote all this while upset genuinely means alot to me and i dont take it for granted at all
+
+and for the record ur literally the most loving girl ever burhhhrg😭 like even with all the arguments and overthinking and everything, i still see how much u care about me in the way u react to things, the way u get jealous, the way u think about us all the time, the way u still get excited over my texts, all of it
+
+i dont wanna lose what we have over exhaustion and misunderstandings bro. like genuinely i still want us, i still want our future, i still wanna experience everything with u and keep making memories with u because despite everything ur still my person 😭
+
+and honestly thank u for staying too because i know i havent been easy either. ive overthought alot, got emotional alot, and put pressure on u sometimes because i was scared of losing the way we used to be. but i dont wanna keep hurting each other over that anymore
+
+i just want us to slowly learn how to love each other properly again without making each other feel drained or unappreciated because i know the love is still there on both sides
+
+and bro u saying ur mom still asks if we broke up everyday lowk killed me 😭 but the fact ur still here despite everyone telling u otherwise genuinely means sm to me and i promise i dont ever wanna take that for granted
+
+i love u alot bro like genuinely too much 😭 and i still get excited over u too even after everything. i still stalk our chats, still reread things, still think about u randomly throughout the day and still want u around in literally everything i do
+
+so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH NGA LIKE i fuxking love u z`,
         theme: "Theme: My Favourite Person",
-        spotify: "PASTE_MONTH_7_SPOTIFY_LINK_HERE",
-        voiceMessage: "month7.mp3",
-        albumTitle: "Month 7 Album",
-        albumItems: [
-          { type: "image", src: "images/month7-1.jpg", alt: "Memory 1" },
-          { type: "image", src: "images/month7-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "videos/month7-1.mp4" }
-        ]
+
+
+        
       }
     ];
 
     const hearts = [];
     const symbols = ["❤️", "💕", "💗", "💖", "💘", "💞"];
     let currentMonthIndex = 0;
+    let currentAlbumIndex = 0;
+
     let voiceLikeTouches = 0;
     let voiceLikeTimer = null;
     let noActive = false;
@@ -727,6 +932,11 @@
     function rand(min, max) {
       return Math.random() * (max - min) + min;
     }
+
+    function normalizeMediaPath(src) {
+      return (src || "").replace(/^(?:\.\/)?(?:images|videos)\//i, "");
+    }
+
 
     function makeHearts() {
       for (let i = 0; i < 28; i++) {
@@ -832,6 +1042,12 @@
     noBtn.addEventListener("click", e => { e.preventDefault(); noVX += rand(-10, 10); noVY += rand(-10, 10); });
 
     yesBtn.addEventListener("click", () => {
+
+      const bgMusic = document.getElementById("bgMusic");
+
+bgMusic.volume = 0.35;
+
+bgMusic.play().catch(() => {});
       modalWrap.style.display = "flex";
       setTimeout(resizeCanvas, 50);
     });
@@ -887,7 +1103,8 @@
         const monthMediaBg = document.getElementById("monthMediaBg");
 
         if (data.video) {
-          monthVideo.src = data.video;
+          monthVideo.src = normalizeMediaPath(data.video);
+
           monthVideo.muted = true;
           monthVideo.loop = true;
           monthVideo.playsInline = true;
@@ -904,32 +1121,81 @@
           monthMediaBg.style.backgroundImage = "none";
           monthMediaBg.style.backgroundColor = "rgba(255, 245, 250, 0.10)";
         } else {
-          monthImage.src = data.image || "";
+          monthImage.src = normalizeMediaPath(data.image || "");
+
           monthImage.style.display = "block";
 
           monthVideo.pause();
           monthVideo.removeAttribute("src");
           monthVideo.style.display = "none";
 
-          monthMediaBg.style.backgroundImage = `url(${data.image})`;
+          monthMediaBg.style.backgroundImage = `url(${normalizeMediaPath(data.image)})`;
+
           monthMediaBg.style.backgroundColor = "transparent";
         }
 
         document.getElementById("monthTitle").textContent = data.title;
         document.getElementById("monthParagraph").textContent = data.paragraph;
-        document.getElementById("monthTheme").textContent = data.theme;
-        document.getElementById("monthSpotify").href = data.spotify;
+        const specialCard = document.getElementById("month7SpecialCard");
 
-        const voiceContainer = document.getElementById("voiceMessageContainer");
-        voiceContainer.innerHTML = `
-          <div class="voiceMessageBox">
-            <audio controls src="${data.voiceMessage}"></audio>
-            <div id="voiceLikeContainer">
-              <div id="voiceLikeCounter">0</div>
-            </div>
-          </div>
-        `;
-        initializeVoiceLike(idx);
+if (idx === 6) {
+  specialCard.innerHTML = `
+    <div class="loveLetterCard">
+      <p>
+        Seven months later, and somehow you still make my heart feel the same way it did at the start.
+
+        Through every phase, every argument, every laugh, every late night, every moment of missing you,
+        and every moment of finally being with you again… you still became my favourite person.
+
+        Thank you for staying.
+        Thank you for loving me.
+        Thank you for being home to me.
+
+        And honestly?
+        I still choose you.
+        Every single time. ❤️
+      </p>
+
+      <div class="floatingHearts">
+        <span>❤️</span>
+        <span>💖</span>
+        <span>💕</span>
+        <span>❤️</span>
+        <span>💗</span>
+      </div>
+    </div>
+  `;
+} else {
+  specialCard.innerHTML = "";
+}
+        document.getElementById("monthTheme").textContent = data.theme;
+        const spotifyBtn = document.getElementById("monthSpotify");
+
+if (data.spotify && !data.spotify.includes("PASTE_")) {
+  spotifyBtn.href = data.spotify;
+  spotifyBtn.style.display = "inline-block";
+} else {
+  spotifyBtn.style.display = "none";
+}
+
+
+const voiceContainer = document.getElementById("voiceMessageContainer");
+
+if (data.voiceMessage) {
+  voiceContainer.innerHTML = `
+    <div class="voiceMessageBox">
+      <audio controls src="${normalizeMediaPath(data.voiceMessage)}"></audio>
+
+      <div id="voiceLikeContainer">
+        <div id="voiceLikeCounter">0</div>
+      </div>
+    </div>
+  `;
+  initializeVoiceLike(idx);
+} else {
+  voiceContainer.innerHTML = "";
+}
+
 
         if (data.albumTitle) {
           viewAlbumBtn.style.display = "block";
@@ -955,7 +1221,8 @@
       albumItems.forEach((item, i) => {
         // allow either { src: "...", type: "image" } or simple string entries
         const srcRaw = typeof item === "string" ? item : (item.src || "");
-        const normalized = srcRaw.replace(/^(?:\.\/)?(?:images|videos)\//i, "");
+        const normalized = normalizeMediaPath(srcRaw);
+
         const ext = normalized.split(".").pop().toLowerCase();
         const wrap = document.createElement("div");
         wrap.className = "mediaWrap";
@@ -1047,15 +1314,18 @@
       if (item.type === "image") {
         const img = document.createElement("img");
         img.className = "lightboxMedia";
-        img.src = item.src;
+        img.src = normalizeMediaPath(item.src);
+
         img.alt = item.alt || "Full size photo";
         container.appendChild(img);
       } else if (item.type === "video") {
         const video = document.createElement("video");
         video.className = "lightboxMedia";
-        video.src = item.src;
+        video.src = normalizeMediaPath(item.src);
+
         video.controls = true;
         video.playsinline = true;
+        video.muted = true;
         video.autoplay = true;
         container.appendChild(video);
       }
@@ -1100,11 +1370,23 @@
     albumModalWrap.addEventListener("click", (e) => { if (e.target === albumModalWrap) closeAlbum(); });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeLightbox();
-        if (monthModalWrap.style.display === "flex") closeAlbum();
-      }
-    });
+  if (e.key === "Escape") {
+    closeLightbox();
+
+    if (albumModalWrap.style.display === "flex") {
+      closeAlbum();
+    }
+
+    if (monthModalWrap.style.display === "flex") {
+      monthModalWrap.style.display = "none";
+    }
+
+    if (modalWrap.style.display === "flex") {
+      modalWrap.style.display = "none";
+    }
+  }
+});
+
 
     const canvas = document.getElementById("signature");
     const ctx = canvas.getContext("2d");
@@ -1271,7 +1553,8 @@
     let keysPressed = [];
     document.addEventListener("keydown", (e) => {
       keysPressed.push(e.key.toLowerCase());
-      keysPressed = keysPressed.slice(-5);
+      keysPressed = keysPressed.slice(-6);
+
       if (keysPressed.join("") === "iloveu") {
         showEasterEgg();
         keysPressed = [];
