@@ -719,7 +719,8 @@ backdrop-filter: blur(15px);
           <div class="monthPicContainer">
             <div id="monthMediaBg" class="monthPicBg"></div>
             <img id="monthImage" class="monthPic" src="" alt="month memory photo">
-              <video id="monthVideo" class="monthPic monthVideo" playsinline muted loop autoplay></video>
+              <video id="monthVideo" class="monthPic monthVideo" playsinline loop></video>
+
           </div>
         </div>
       </div>
@@ -814,6 +815,25 @@ function attachVideoAudioFade(video) {
   video.addEventListener("pause", () => fadeInBackgroundAfterVideo(video));
   video.addEventListener("ended", () => fadeInBackgroundAfterVideo(video));
 }
+
+function lowerBackgroundForVoice() {
+  if (!bgMusic.paused) {
+    fadeMedia(bgMusic, 0.12, 500);
+  }
+}
+
+function restoreBackgroundAfterVoice() {
+  if (!bgMusic.paused) {
+    fadeMedia(bgMusic, BG_VOLUME, 600);
+  }
+}
+
+function attachVoiceAudioFade(audio) {
+  audio.addEventListener("play", lowerBackgroundForVoice);
+  audio.addEventListener("pause", restoreBackgroundAfterVoice);
+  audio.addEventListener("ended", restoreBackgroundAfterVoice);
+}
+
 
 
     const monthData = [
@@ -1165,11 +1185,13 @@ bgMusic.play().catch(() => {});
           monthVideo.style.height = "auto";
           monthVideo.currentTime = 0;
           monthVideo.load();
-          monthVideo.play().catch(() => {});
-          if (!monthVideo.dataset.fadeReady) {
+         if (!monthVideo.dataset.fadeReady) {
   attachVideoAudioFade(monthVideo);
   monthVideo.dataset.fadeReady = "true";
 }
+
+monthVideo.play().catch(() => {});
+
 
 
 
@@ -1240,16 +1262,20 @@ if (data.spotify && !data.spotify.includes("PASTE_")) {
 const voiceContainer = document.getElementById("voiceMessageContainer");
 
 if (data.voiceMessage) {
-  voiceContainer.innerHTML = `
-    <div class="voiceMessageBox">
-      <audio controls src="${normalizeMediaPath(data.voiceMessage)}"></audio>
+voiceContainer.innerHTML = `
+  <div class="voiceMessageBox">
+    <audio id="monthVoiceMessage" controls src="${normalizeMediaPath(data.voiceMessage)}"></audio>
 
-      <div id="voiceLikeContainer">
-        <div id="voiceLikeCounter">0</div>
-      </div>
+    <div id="voiceLikeContainer">
+      <div id="voiceLikeCounter">0</div>
     </div>
-  `;
-  initializeVoiceLike(idx);
+  </div>
+`;
+
+const voiceAudio = document.getElementById("monthVoiceMessage");
+attachVoiceAudioFade(voiceAudio);
+initializeVoiceLike(idx);
+
 } else {
   voiceContainer.innerHTML = "";
 }
@@ -1266,8 +1292,23 @@ if (data.voiceMessage) {
       });
     });
 
-    closeMonthModal.addEventListener("click", () => { monthModalWrap.style.display = "none"; });
-    monthModalWrap.addEventListener("click", (e) => { if (e.target === monthModalWrap) monthModalWrap.style.display = "none"; });
+    function closeMonthMemory() {
+  const voiceAudio = document.getElementById("monthVoiceMessage");
+  if (voiceAudio) {
+    voiceAudio.pause();
+    voiceAudio.currentTime = 0;
+  }
+
+  restoreBackgroundAfterVoice();
+  closeMonthMemory();
+
+}
+
+closeMonthModal.addEventListener("click", closeMonthMemory);
+monthModalWrap.addEventListener("click", (e) => {
+  if (e.target === monthModalWrap) closeMonthMemory();
+});
+
 
     function buildAlbumGallery(albumItems) {
       // normalize paths to be relative to index.html (remove images/ or videos/ prefixes)
@@ -1389,7 +1430,7 @@ wrap.appendChild(vid);
         video.controls = true;
         video.playsinline = true;
         video.muted = true;
-        video.autoplay = true;
+        video.autoplay = false;
 video.volume = 0;
 attachVideoAudioFade(video);
 container.appendChild(video);
