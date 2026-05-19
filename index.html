@@ -769,6 +769,46 @@ backdrop-filter: blur(15px);
 const BG_VOLUME = 0.35;
 let backgroundWasPlaying = false;
 
+let audioCtx;
+let bgSource;
+let bgGain;
+let bgGainFadeTimer;
+
+function initBackgroundAudio() {
+  if (audioCtx) return;
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  bgSource = audioCtx.createMediaElementSource(bgMusic);
+  bgGain = audioCtx.createGain();
+  bgGain.gain.value = BG_VOLUME;
+
+  bgSource.connect(bgGain);
+  bgGain.connect(audioCtx.destination);
+}
+
+function fadeBackgroundTo(targetVolume, duration = 600) {
+  if (!bgGain) {
+    fadeMedia(bgMusic, targetVolume, duration);
+    return;
+  }
+
+  clearInterval(bgGainFadeTimer);
+
+  const startVolume = bgGain.gain.value;
+  const startTime = performance.now();
+
+  bgGainFadeTimer = setInterval(() => {
+    const progress = Math.min((performance.now() - startTime) / duration, 1);
+    bgGain.gain.value = startVolume + (targetVolume - startVolume) * progress;
+
+    if (progress >= 1) {
+      clearInterval(bgGainFadeTimer);
+      bgGain.gain.value = targetVolume;
+    }
+  }, 30);
+}
+
+
 function fadeMedia(media, targetVolume, duration = 700, callback) {
   clearInterval(media.fadeTimer);
 
@@ -791,7 +831,8 @@ function fadeOutBackgroundForVideo(video) {
   backgroundWasPlaying = !bgMusic.paused;
 
   if (backgroundWasPlaying) {
-    fadeMedia(bgMusic, 0, 700, () => bgMusic.pause());
+    fadeBackgroundTo(0, 700);
+    setTimeout(() => bgMusic.pause(), 720);
   }
 
   video.muted = false;
@@ -803,12 +844,12 @@ function fadeInBackgroundAfterVideo(video) {
   fadeMedia(video, 0, 500);
 
   if (backgroundWasPlaying) {
-    bgMusic.volume = 0;
     bgMusic.play().then(() => {
-      fadeMedia(bgMusic, BG_VOLUME, 700);
+      fadeBackgroundTo(BG_VOLUME, 700);
     }).catch(() => {});
   }
 }
+
 
 function attachVideoAudioFade(video) {
   video.addEventListener("play", () => fadeOutBackgroundForVideo(video));
@@ -818,15 +859,16 @@ function attachVideoAudioFade(video) {
 
 function lowerBackgroundForVoice() {
   if (!bgMusic.paused) {
-    fadeMedia(bgMusic, 0.12, 500);
+    fadeBackgroundTo(0.12, 500);
   }
 }
 
 function restoreBackgroundAfterVoice() {
   if (!bgMusic.paused) {
-    fadeMedia(bgMusic, BG_VOLUME, 600);
+    fadeBackgroundTo(BG_VOLUME, 600);
   }
 }
+
 
 function attachVoiceAudioFade(audio) {
   audio.addEventListener("play", lowerBackgroundForVoice);
@@ -1115,8 +1157,16 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
 
     yesBtn.addEventListener("click", () => {
 
-      bgMusic.volume = BG_VOLUME;
+    initBackgroundAudio();
+
+if (audioCtx.state === "suspended") {
+  audioCtx.resume();
+}
+
+bgMusic.volume = 1;
+fadeBackgroundTo(BG_VOLUME, 0);
 bgMusic.play().catch(() => {});
+
 
       modalWrap.style.display = "flex";
       setTimeout(resizeCanvas, 50);
@@ -1292,17 +1342,22 @@ initializeVoiceLike(idx);
       });
     });
 
-    function closeMonthMemory() {
+function closeMonthMemory() {
   const voiceAudio = document.getElementById("monthVoiceMessage");
   if (voiceAudio) {
     voiceAudio.pause();
     voiceAudio.currentTime = 0;
   }
 
-  restoreBackgroundAfterVoice();
-  closeMonthMemory();
+  const monthVideo = document.getElementById("monthVideo");
+  if (monthVideo) {
+    monthVideo.pause();
+  }
 
+  restoreBackgroundAfterVoice();
+  monthModalWrap.style.display = "none";
 }
+
 
 closeMonthModal.addEventListener("click", closeMonthMemory);
 monthModalWrap.addEventListener("click", (e) => {
@@ -1429,7 +1484,8 @@ wrap.appendChild(vid);
 
         video.controls = true;
         video.playsinline = true;
-        video.muted = true;
+        video.muted = false;
+
         video.autoplay = false;
 video.volume = 0;
 attachVideoAudioFade(video);
@@ -1485,8 +1541,8 @@ container.appendChild(video);
     }
 
     if (monthModalWrap.style.display === "flex") {
-      monthModalWrap.style.display = "none";
-    }
+  closeMonthMemory();
+}
 
     if (modalWrap.style.display === "flex") {
       modalWrap.style.display = "none";
