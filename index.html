@@ -719,7 +719,8 @@ backdrop-filter: blur(15px);
           <div class="monthPicContainer">
             <div id="monthMediaBg" class="monthPicBg"></div>
             <img id="monthImage" class="monthPic" src="" alt="month memory photo">
-              <video id="monthVideo" class="monthPic monthVideo" playsinline loop></video>
+              <video id="monthVideo" class="monthPic monthVideo" controls playsinline loop></video>
+
 
           </div>
         </div>
@@ -827,35 +828,24 @@ function fadeMedia(media, targetVolume, duration = 700, callback) {
   }, 30);
 }
 
-function fadeOutBackgroundForVideo(video) {
-  backgroundWasPlaying = !bgMusic.paused;
-
-  if (backgroundWasPlaying) {
-    fadeBackgroundTo(0, 700);
-    setTimeout(() => bgMusic.pause(), 720);
-  }
-
-  video.muted = false;
-  video.volume = 0;
-  fadeMedia(video, 1, 700);
-}
-
-function fadeInBackgroundAfterVideo(video) {
-  fadeMedia(video, 0, 500);
-
-  if (backgroundWasPlaying) {
-    bgMusic.play().then(() => {
-      fadeBackgroundTo(BG_VOLUME, 700);
-    }).catch(() => {});
+function lowerBackgroundForVideo() {
+  if (!bgMusic.paused) {
+    fadeBackgroundTo(0.08, 500);
   }
 }
 
+function restoreBackgroundAfterVideo() {
+  if (!bgMusic.paused) {
+    fadeBackgroundTo(BG_VOLUME, 600);
+  }
+}
 
 function attachVideoAudioFade(video) {
-  video.addEventListener("play", () => fadeOutBackgroundForVideo(video));
-  video.addEventListener("pause", () => fadeInBackgroundAfterVideo(video));
-  video.addEventListener("ended", () => fadeInBackgroundAfterVideo(video));
+  video.addEventListener("play", lowerBackgroundForVideo);
+  video.addEventListener("pause", restoreBackgroundAfterVideo);
+  video.addEventListener("ended", restoreBackgroundAfterVideo);
 }
+
 
 function lowerBackgroundForVoice() {
   if (!bgMusic.paused) {
@@ -1226,7 +1216,7 @@ bgMusic.play().catch(() => {});
           monthVideo.src = normalizeMediaPath(data.video);
 
           monthVideo.muted = false;
-          monthVideo.volume = 0;
+          monthVideo.volume = 1;
 
           monthVideo.loop = true;
           monthVideo.playsInline = true;
@@ -1234,13 +1224,13 @@ bgMusic.play().catch(() => {});
           monthVideo.style.width = "auto";
           monthVideo.style.height = "auto";
           monthVideo.currentTime = 0;
-          monthVideo.load();
-         if (!monthVideo.dataset.fadeReady) {
+monthVideo.preload = "metadata";
+monthVideo.load();
+
+if (!monthVideo.dataset.fadeReady) {
   attachVideoAudioFade(monthVideo);
   monthVideo.dataset.fadeReady = "true";
 }
-
-monthVideo.play().catch(() => {});
 
 
 
@@ -1354,7 +1344,10 @@ function closeMonthMemory() {
     monthVideo.pause();
   }
 
-  restoreBackgroundAfterVoice();
+  restoreBackgroundAfterVideo();
+restoreBackgroundAfterVoice();
+monthModalWrap.style.display = "none";
+
   monthModalWrap.style.display = "none";
 }
 
@@ -1389,9 +1382,9 @@ monthModalWrap.addEventListener("click", (e) => {
           vid.src = normalized;
 vid.setAttribute("playsinline", "");
 vid.preload = "metadata";
-vid.addEventListener("play", () => fadeOutBackgroundForVideo(vid));
-vid.addEventListener("pause", () => fadeInBackgroundAfterVideo(vid));
-vid.addEventListener("ended", () => fadeInBackgroundAfterVideo(vid));
+attachVideoAudioFade(vid);
+vid.addEventListener("click", (e) => e.stopPropagation());
+
 wrap.appendChild(vid);
 
         } else {
@@ -1426,16 +1419,24 @@ wrap.appendChild(vid);
     }
 
     function closeAlbum() {
-      albumModal.classList.remove("show");
-      albumModal.classList.add("reverse-close");
-      // restore after animation
-      setTimeout(() => {
-        albumModal.classList.remove("reverse-close");
-        albumModalWrap.style.display = "none";
-        document.body.style.overflow = "";
-        albumGallery.innerHTML = "";
-      }, 260);
-    }
+  albumGallery.querySelectorAll("video").forEach(video => {
+    video.pause();
+    video.currentTime = 0;
+  });
+
+  restoreBackgroundAfterVideo();
+
+  albumModal.classList.remove("show");
+  albumModal.classList.add("reverse-close");
+
+  setTimeout(() => {
+    albumModal.classList.remove("reverse-close");
+    albumModalWrap.style.display = "none";
+    document.body.style.overflow = "";
+    albumGallery.innerHTML = "";
+  }, 260);
+}
+
 
     function openLightbox(albumItems, startIndex) {
       // Create lightbox if it doesn't exist
@@ -1487,7 +1488,7 @@ wrap.appendChild(vid);
         video.muted = false;
 
         video.autoplay = false;
-video.volume = 0;
+video.volume = 1;
 attachVideoAudioFade(video);
 container.appendChild(video);
 
