@@ -2,187 +2,379 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Happy 7 Months ❤️</title>
 
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
- html, body {
-  margin: 0;
-  width: 100%;
-  min-height: 100%;
-  min-height: 100dvh;
-  overflow-x: hidden;
 
-  font-family: Arial, sans-serif;
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
+      color: white;
+    }
 
-  background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
+    body.modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
 
-  color: white;
-}
+    button,
+    a,
+    input,
+    textarea {
+      font: inherit;
+    }
 
-.screen,
-#memoryPage,
-#loadingScreen {
-  min-height: 100dvh;
-}
+    #easterEggHint {
+      position: fixed;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      left: max(18px, env(safe-area-inset-left));
+      z-index: 150;
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 0.8;
+    }
 
-#easterEggHint {
-  position: fixed;
-  bottom: 18px;
-  left: 18px;
-  z-index: 150;
-  font-size: 1.8rem;
-  cursor: pointer;
-  opacity: 0.8;
-}
     #heartLayer {
-      position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
     }
+
     .heart {
-      position: fixed; left: 0; top: 0; pointer-events: none; user-select: none; will-change: transform;
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      user-select: none;
+      will-change: transform;
     }
+
     .screen {
-      position: fixed; inset: 0; z-index: 5; display: flex; justify-content: center;
-      align-items: center; text-align: center; padding: 20px;
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100dvh;
+      text-align: center;
+      padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     }
+
     .card {
-      width: min(92vw, 430px); min-height: 360px; padding: 35px 22px;
-      border-radius: 32px; background: rgba(255, 255, 255, 0.23);
+      width: min(92vw, 430px);
+      min-height: 360px;
+      padding: 35px 22px;
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.23);
       border: 1px solid rgba(255, 255, 255, 0.45);
       box-shadow: 0 20px 55px rgba(130, 0, 70, 0.25);
-      backdrop-filter: blur(15px); position: relative; overflow: hidden;
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
     }
-    h1 { font-size: clamp(2.5rem, 12vw, 4.5rem); margin: 0; line-height: 1; }
-    p { font-size: 1.1rem; line-height: 1.45; }
-    #home, #proposal { transition: opacity 0.6s ease, transform 0.6s ease; }
+
+    h1 {
+      font-size: clamp(2.5rem, 12vw, 4.5rem);
+      margin: 0;
+      line-height: 1;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.45;
+    }
+
+    #home,
     #proposal {
-      position: absolute; inset: 0; padding: 35px 22px; opacity: 0;
-      transform: translateY(35px); pointer-events: none; display: flex;
-      flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    #proposal.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    #home.hide { opacity: 0; transform: translateY(-35px); pointer-events: none; }
-    #proposal h2 { font-size: clamp(2.2rem, 10vw, 3.7rem); margin: 0 0 35px; line-height: 1; }
-    button, .spotifyBtn {
-      border: none; border-radius: 999px; padding: 15px 32px; font-size: 1.05rem;
-      font-weight: bold; color: #ff3f8f; background: white;
+
+    #proposal {
+      position: absolute;
+      inset: 0;
+      padding: 35px 22px;
+      opacity: 0;
+      transform: translateY(35px);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #proposal.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    #home.hide {
+      opacity: 0;
+      transform: translateY(-35px);
+      pointer-events: none;
+    }
+
+    #proposal h2 {
+      font-size: clamp(2.2rem, 10vw, 3.7rem);
+      margin: 0 0 35px;
+      line-height: 1;
+    }
+
+    button,
+    .spotifyBtn {
+      border: none;
+      border-radius: 999px;
+      padding: 15px 32px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #ff3f8f;
+      background: white;
       box-shadow: 0 10px 25px rgba(130, 0, 70, 0.25);
-      cursor: pointer; touch-action: manipulation; text-decoration: none; display: inline-block;
-      transition: all 0.3s ease;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
     }
-    button:active { transform: scale(0.95); }
-    #yesBtn { position: relative; z-index: 10; margin-right: 105px; }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    #yesBtn {
+      position: relative;
+      z-index: 10;
+      margin-right: 105px;
+    }
+
     #noBtn {
-      position: fixed; left: 0; top: 0; z-index: 20; display: none; will-change: transform;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 20;
+      display: none;
+      will-change: transform;
     }
-    #modalWrap, #monthModalWrap, #albumModalWrap {
-      position: fixed; inset: 0; z-index: 50; display: none; justify-content: center;
-      align-items: center; padding: 18px; background: rgba(100, 0, 50, 0.38);
-      backdrop-filter: blur(10px); animation: fadeIn 0.3s ease;
+
+    #modalWrap,
+    #monthModalWrap,
+    #albumModalWrap {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      background: rgba(100, 0, 50, 0.38);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
     }
+
+    #modalWrap { z-index: 50; }
+    #monthModalWrap { z-index: 80; }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    .modal, .monthModal, .albumModal {
-      width: min(94vw, 500px); max-height: 90vh; overflow-y: auto;
-      -webkit-overflow-scrolling: touch; background: rgba(255,255,255,0.98);
-      color: #c31864; border-radius: 28px; padding: 22px;
-      text-align: center; box-shadow: 0 20px 65px rgba(80, 0, 50, 0.35);
+
+    .modal,
+    .monthModal,
+    .albumModal {
+      width: min(94vw, 500px);
+      max-height: 90dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: rgba(255, 255, 255, 0.98);
+      color: #c31864;
+      border-radius: 28px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 20px 65px rgba(80, 0, 50, 0.35);
       position: relative;
     }
+
     .closeModal {
-      position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; padding: 0;
-      border-radius: 50%; background: #ffe5ef; color: #c31864; box-shadow: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      background: #ffe5ef;
+      color: #c31864;
+      box-shadow: none;
+      z-index: 5;
     }
-    .modal h2, .monthModal h2, .albumModal h2 { margin: 35px 0 8px; font-size: 1.8rem; }
-    .modal p, .monthModal p, .albumModal p { color: #9f1b5b; margin: 10px 0 0; }
+
+    .modal h2,
+    .monthModal h2,
+    .albumModal h2 {
+      margin: 35px 0 8px;
+      font-size: 1.8rem;
+    }
+
+    .modal p,
+    .monthModal p,
+    .albumModal p {
+      color: #9f1b5b;
+      margin: 10px 0 0;
+    }
+
     canvas {
-      width: 100%; height: 190px; background: white; border: 3px dashed #ff8fbc;
-      border-radius: 20px; touch-action: none;
+      width: 100%;
+      height: 190px;
+      background: white;
+      border: 3px dashed #ff8fbc;
+      border-radius: 20px;
+      touch-action: none;
     }
-    .modalBtns { display: flex; gap: 10px; margin-top: 14px; }
-    .modalBtns button { flex: 1; color: white; background: #ff5f9e; font-size: 1rem; }
-    #clearSig { background: #ffe5ef; color: #d32872; }
+
+    .modalBtns {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .modalBtns button {
+      flex: 1;
+      color: white;
+      background: #ff5f9e;
+      font-size: 1rem;
+    }
+
+    #clearSig {
+      background: #ffe5ef;
+      color: #d32872;
+    }
+
     #finalMsg {
-      display: none; margin-top: 14px; padding: 16px; border-radius: 16px;
-      background: #fff0f7; font-weight: bold; color: #c31864;
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #fff0f7;
+      font-weight: bold;
+      color: #c31864;
       animation: slideUp 0.4s ease;
     }
+
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     #continueToMemories {
-      display: none; margin-top: 12px; background: #ff5f9e; color: white; width: 100%;
+      display: none;
+      margin-top: 12px;
+      background: #ff5f9e;
+      color: white;
+      width: 100%;
     }
+
     #memoryPage {
-      position: fixed; inset: 0; z-index: 40; display: none; overflow-y: auto;
-      padding: 35px 18px; text-align: center;
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      overflow-y: auto;
+      min-height: 100dvh;
+      padding: max(35px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(35px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      text-align: center;
       background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
-      -webkit-overflow-scrolling: touch; touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
     }
-    .memoryHeader { max-width: 500px; margin: 0 auto 24px; }
-    .memoryHeader h1 { font-size: clamp(2.1rem, 10vw, 3.8rem); }
-    .timeline { max-width: 500px; margin: 0 auto; display: grid; gap: 16px; padding-bottom: 40px; }
+
+    .memoryHeader {
+      max-width: 500px;
+      margin: 0 auto 24px;
+    }
+
+    .memoryHeader h1 {
+      font-size: clamp(2.1rem, 10vw, 3.8rem);
+    }
+
+    .timeline {
+      max-width: 500px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+
     .monthPreview {
-      background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.45);
-      border-radius: 25px; padding: 18px; backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 25px;
+      padding: 18px;
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
       box-shadow: 0 16px 42px rgba(130, 0, 70, 0.22);
-      text-align: left; color: white; width: 100%;
+      text-align: left;
+      color: white;
+      width: 100%;
       transition: transform 0.2s ease, background 0.2s ease;
       position: relative;
     }
-    .monthPreview:active { transform: scale(0.97); background: rgba(255, 255, 255, 0.34); }
-    .monthPreview h2 { margin: 0 0 6px; font-size: 1.45rem; }
-    .monthPreview p { margin: 0; opacity: 0.95; font-size: 0.98rem; }
+
+    .monthPreview:active {
+      transform: scale(0.97);
+      background: rgba(255, 255, 255, 0.34);
+    }
+
+    .monthPreview h2 {
+      margin: 0 0 6px;
+      font-size: 1.45rem;
+      padding-right: 38px;
+    }
+
+    .monthPreview p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 0.98rem;
+    }
+
     .monthBadge {
-      position: absolute; top: 10px; right: 15px; width: 32px; height: 32px;
-      background: #ffd700; border-radius: 50%; display: flex; justify-content: center;
-      align-items: center; font-size: 1.2rem; opacity: 0;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background: #ffd700;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .monthPreview.unlocked .monthBadge { opacity: 1; }
-    #monthModalWrap { z-index: 80; }
 
-      #albumModalWrap {
-        position: fixed;
-        inset: 0;
-        z-index: 110;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        padding: 18px;
-        background: rgba(10, 0, 30, 0.78);
-        backdrop-filter: blur(12px);
-        overflow-y: auto;
-      }
-
-      .albumModal {
-        position: relative;
-        width: min(980px, 96vw);
-        max-width: 980px;
-        max-height: 88vh; /* constrain modal height and scroll media inside */
-        overflow-y: auto;
-overflow-x: hidden;
-        border-radius: 22px;
-        background: rgba(255,255,255,0.98);
-        color: #c31864;
-        padding: 18px;
-        box-shadow: 0 30px 80px rgba(70, 0, 50, 0.35);
-        transform-origin: center center;
-        animation: revealCard 0.35s ease;
-        display: flex;
-        flex-direction: column;
-      }
-
-    @keyframes revealCard {
-      from { opacity: 0; transform: translateY(45px) scale(0.92); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .monthPreview.unlocked .monthBadge {
+      opacity: 1;
     }
-    .monthModal h2 { margin: 35px 0 12px; font-size: 1.7rem; text-align: center; }
+
+    .monthModal h2 {
+      margin: 35px 0 12px;
+      font-size: 1.7rem;
+      text-align: center;
+    }
 
     .monthPicFrameWrapper {
       width: 100%;
@@ -197,6 +389,7 @@ overflow-x: hidden;
       border-radius: 32px;
       background: rgba(255, 220, 240, 0.18);
       border: 1px solid rgba(255, 255, 255, 0.35);
+      -webkit-backdrop-filter: blur(26px) saturate(135%);
       backdrop-filter: blur(26px) saturate(135%);
       box-shadow:
         0 18px 48px rgba(130, 0, 70, 0.22),
@@ -205,22 +398,17 @@ overflow-x: hidden;
         inset 0 -2px 10px rgba(130, 0, 70, 0.08);
       position: relative;
       max-width: 90vw;
-      max-height: 65vh;
+      max-height: 65dvh;
     }
 
     .monthPicFrame::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 40%;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.16) 0%,
-        rgba(255, 255, 255, 0.05) 55%,
-        transparent 100%
-      );
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 55%, transparent 100%);
       border-radius: 32px 32px 0 0;
       pointer-events: none;
       z-index: 1;
@@ -241,7 +429,7 @@ overflow-x: hidden;
       inset: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(255, 245, 250, 0.10);
+      background-color: rgba(255, 245, 250, 0.1);
       background-size: cover;
       background-position: center;
       filter: blur(26px) brightness(0.72);
@@ -255,7 +443,7 @@ overflow-x: hidden;
       width: auto;
       max-width: 100%;
       height: auto;
-      max-height: 55vh;
+      max-height: 55dvh;
       object-fit: contain;
       object-position: center;
       display: block;
@@ -273,6 +461,7 @@ overflow-x: hidden;
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
     .monthModal p {
       color: #9f1b5b;
       font-size: 1rem;
@@ -280,16 +469,44 @@ overflow-x: hidden;
       line-height: 1.7;
       white-space: pre-line;
     }
+
     .themeTag {
-      display: inline-block; margin: 8px 0 14px; padding: 8px 13px;
-      border-radius: 999px; background: #ffe5ef; color: #c31864; font-weight: bold;
+      display: inline-block;
+      margin: 8px 0 14px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: #ffe5ef;
+      color: #c31864;
+      font-weight: bold;
     }
-    .spotifyBtn { width: 100%; text-align: center; background: #ff5f9e; color: white; margin-top: 4px; }
-    #viewAlbumBtn { display: none; width: 100%; margin-top: 10px; background: #ff79b0; color: white; }
-    .letterCard {
-      max-width: 500px; margin: 8px auto 50px; padding: 24px; border-radius: 28px;
-      background: rgba(255, 255, 255, 0.28); border: 1px solid rgba(255, 255, 255, 0.45);
-      backdrop-filter: blur(14px); box-shadow: 0 16px 42px rgba(130, 0, 70, 0.22);
+
+    .spotifyBtn {
+      width: 100%;
+      text-align: center;
+      background: #ff5f9e;
+      color: white;
+      margin-top: 4px;
+    }
+
+    #viewAlbumBtn {
+      display: none;
+      width: 100%;
+      margin-top: 10px;
+      background: #ff79b0;
+      color: white;
+    }
+
+    .letterCard,
+    .finalCard {
+      max-width: 500px;
+      margin: 8px auto 50px;
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 42px rgba(130, 0, 70, 0.22);
     }
 
     #loadingScreen {
@@ -299,6 +516,7 @@ overflow-x: hidden;
       display: none;
       justify-content: center;
       align-items: center;
+      min-height: 100dvh;
       background: radial-gradient(circle at top, #ffd6e8, #ff87b7, #ff4f96);
       padding: 20px;
     }
@@ -308,18 +526,21 @@ overflow-x: hidden;
       padding: 30px 24px;
       border-radius: 30px;
       text-align: center;
-      background: rgba(255,255,255,0.22);
-      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       -webkit-backdrop-filter: blur(15px);
-backdrop-filter: blur(15px);
+      backdrop-filter: blur(15px);
+    }
 
+    .loaderBox h1 {
+      font-size: clamp(2rem, 9vw, 3.4rem);
     }
 
     .loadingBar {
       width: 100%;
       height: 16px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.3);
       overflow: hidden;
       margin-top: 25px;
     }
@@ -332,111 +553,79 @@ backdrop-filter: blur(15px);
       transition: width 0.25s linear;
     }
 
-    #loadingText {
+    #loadingText,
+    #countdown {
       margin-top: 18px;
       font-size: 1rem;
-    }
-
-    #countdown {
-      margin-top: 20px;
       opacity: 0.92;
-      font-size: 1rem;
     }
 
     .finalCard {
       display: none;
-      max-width: 500px;
-      margin: 0 auto 50px;
       padding: 28px;
       border-radius: 30px;
-      background: rgba(255,255,255,0.28);
-      border: 1px solid rgba(255,255,255,0.45);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 16px 42px rgba(130,0,70,0.22);
       animation: finalReveal 0.7s ease;
     }
 
     @keyframes finalReveal {
-      from {
-        opacity: 0;
-        transform: translateY(40px) scale(0.94);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(40px) scale(0.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .letterCard h2 { margin-top: 0; }
+    .letterCard h2 {
+      margin-top: 0;
+    }
 
     .loveLetterCard {
-  position: relative;
-  margin-top: 18px;
-  padding: 24px 22px 40px;
-  border-radius: 28px;
-  background: rgba(255,255,255,0.16);
-  border: 1px solid rgba(255,255,255,0.28);
-  backdrop-filter: blur(14px);
-  box-shadow:
-    0 14px 40px rgba(130,0,70,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.22);
-  overflow: hidden;
-  text-align: center;
-}
+      position: relative;
+      margin-top: 18px;
+      padding: 24px 22px 40px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow:
+        0 14px 40px rgba(130, 0, 70, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      overflow: hidden;
+      text-align: center;
+    }
 
-.loveLetterCard p {
-  color: #a11458;
-  font-size: 1rem;
-  line-height: 1.9;
-  margin: 0;
-  white-space: pre-line;
-}
+    .loveLetterCard p {
+      color: #a11458;
+      font-size: 1rem;
+      line-height: 1.9;
+      margin: 0;
+      white-space: pre-line;
+    }
 
-.floatingHearts {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-}
+    .floatingHearts {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
 
-.floatingHearts span {
-  font-size: 1.3rem;
-  animation: floatHeart 2.6s ease-in-out infinite;
-}
+    .floatingHearts span {
+      font-size: 1.3rem;
+      animation: floatHeart 2.6s ease-in-out infinite;
+    }
 
-.floatingHearts span:nth-child(2) {
-  animation-delay: 0.4s;
-}
+    .floatingHearts span:nth-child(2) { animation-delay: 0.4s; }
+    .floatingHearts span:nth-child(3) { animation-delay: 0.8s; }
+    .floatingHearts span:nth-child(4) { animation-delay: 1.2s; }
+    .floatingHearts span:nth-child(5) { animation-delay: 1.6s; }
 
-.floatingHearts span:nth-child(3) {
-  animation-delay: 0.8s;
-}
+    @keyframes floatHeart {
+      0%, 100% { transform: translateY(0); opacity: 0.75; }
+      50% { transform: translateY(-8px); opacity: 1; }
+    }
 
-.floatingHearts span:nth-child(4) {
-  animation-delay: 1.2s;
-}
-
-.floatingHearts span:nth-child(5) {
-  animation-delay: 1.6s;
-}
-
-@keyframes floatHeart {
-  0%, 100% {
-    transform: translateY(0px);
-    opacity: 0.75;
-  }
-
-  50% {
-    transform: translateY(-8px);
-    opacity: 1;
-  }
-}
-
-    /* Achievements Panel */
     #achievementPanel {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      right: max(20px, env(safe-area-inset-right));
       z-index: 100;
       display: none;
       max-width: 280px;
@@ -455,42 +644,92 @@ backdrop-filter: blur(15px);
     }
 
     @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(350px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      from { opacity: 0; transform: translateX(350px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
-    .achievementBox .emoji { font-size: 2rem; display: block; margin-bottom: 6px; }
+    .achievementBox .emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 6px;
+    }
 
-    /* Album modal styles */
-    #albumModalWrap {
-      position: fixed;
-      inset: 0;
-      z-index: 120; /* must be higher than monthModalWrap (80) */
-      display: none;
-      justify-content: center;
+    .voiceMessageBox {
+      display: grid;
+      grid-template-columns: 1fr auto;
       align-items: center;
-      padding: 20px;
-      background: rgba(10, 0, 30, 0.78); /* dark backdrop covering entire viewport */
+      gap: 10px;
+      margin: 14px 0;
+      padding: 12px;
+      border-radius: 18px;
+      background: #fff0f7;
+    }
+
+    .voiceMessageBox audio {
+      width: 100%;
+      min-width: 0;
+    }
+
+    #voiceLikeContainer {
+      position: relative;
+      width: 48px;
+      min-height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #c31864;
+      background: #ffe0ed;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #voiceLikeCounter::before {
+      content: "❤️ ";
+    }
+
+    .voiceHeartStack {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      animation: voiceHeartRise 1.5s ease forwards;
+    }
+
+    @keyframes voiceHeartRise {
+      from { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -64px) scale(1.5); }
+    }
+
+    #albumModalWrap {
+      z-index: 120;
+      align-items: center;
+      padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+      background: rgba(10, 0, 30, 0.78);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
-      overflow-y: auto; /* allow scrolling inside the overlay */
-    }
-
-    
-
-    /* make modal content scroll internally while body stays fixed */
-    .albumModal .albumContent {
       overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 6px 0;
     }
 
-    /* responsive gallery grid similar to phone gallery */
+    .albumModal {
+      width: min(980px, 96vw);
+      max-width: 980px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      border-radius: 22px;
+      padding: 18px;
+      transform-origin: center center;
+      animation: revealCard 0.35s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes revealCard {
+      from { opacity: 0; transform: translateY(45px) scale(0.92); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .albumGallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -508,114 +747,143 @@ backdrop-filter: blur(15px);
       overflow: hidden;
       display: block;
       position: relative;
+      cursor: pointer;
     }
 
-    .albumPhoto {
-      display: block;
-      width: 100%;
-      height: auto; /* preserve intrinsic aspect ratio */
-      max-height: 52vh;
-      object-fit: contain; /* preserve portrait orientation and avoid cropping */
-      background: #ffd5e7;
-    }
-
+    .albumPhoto,
     .albumVideo {
       display: block;
       width: 100%;
       height: auto;
-      max-height: 52vh;
+      max-height: 52dvh;
+      object-fit: contain;
+      background: #ffd5e7;
+    }
+
+    .albumVideo {
       border-radius: 10px;
       background: #000;
-      object-fit: contain;
     }
 
     .albumModal.show { transform: scale(1); opacity: 1; }
     .albumModal.reverse-close { transform: scale(0.96); opacity: 0; }
 
     #lightboxWrap {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 18px;
-  background: rgba(10, 0, 30, 0.85);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      background: rgba(12, 0, 24, 0.86);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
 
-#lightboxWrap.show {
-  display: flex;
-}
+    #lightboxWrap.show {
+      display: flex;
+    }
 
-.lightboxContent {
-  position: relative;
-  width: min(96vw, 900px);
-  max-height: 92vh;
-  text-align: center;
-}
+    .lightboxContent {
+      position: relative;
+      width: min(96vw, 920px);
+      max-height: 92dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
 
-.lightboxClose {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-}
+    .lightboxClose {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.94);
+      color: #c31864;
+      box-shadow: none;
+    }
 
-.lightboxMedia {
-  max-width: 100%;
-  max-height: 82vh;
-  border-radius: 18px;
-  object-fit: contain;
-  background: #000;
-}
+    #lightboxMediaContainer {
+      width: 100%;
+      display: grid;
+      place-items: center;
+    }
 
-.lightboxNav {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-}
+    .lightboxMedia {
+      max-width: 100%;
+      max-height: 82dvh;
+      border-radius: 18px;
+      object-fit: contain;
+      background: #000;
+    }
 
-.lightboxDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.45);
-}
+    .lightboxNav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-.lightboxDot.active {
-  background: white;
-}
+    .lightboxDot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+    }
 
-.confetti {
-  position: fixed;
-  z-index: 210;
-  pointer-events: none;
-}
+    .lightboxDot.active {
+      background: white;
+    }
 
-.easterEggModal {
-  width: min(92vw, 420px);
-  padding: 24px;
-  border-radius: 28px;
-  background: white;
-  color: #c31864;
-  text-align: center;
-}
+    .easterEggModal {
+      width: min(92vw, 420px);
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.98);
+      color: #c31864;
+      text-align: center;
+      box-shadow: 0 20px 65px rgba(80, 0, 50, 0.35);
+    }
 
-    @media (max-width: 600px) { .albumGallery { grid-template-columns: 1fr; } }
+    .easterEggModal p {
+      color: #9f1b5b;
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 210;
+      pointer-events: none;
+      user-select: none;
+      will-change: transform, opacity;
+    }
+
+    @media (max-width: 600px) {
+      .albumGallery {
+        grid-template-columns: 1fr;
+      }
+
+      .modalBtns {
+        flex-direction: column;
+      }
+
+      #yesBtn {
+        margin-right: 84px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <audio id="bgMusic" loop autoplay preload="auto">
+    <source src="background.mp3" type="audio/mpeg" />
+  </audio>
 
-  <audio id="bgMusic" loop>
-  <source src="background.mp3" type="audio/mpeg">
-</audio>
   <div id="heartLayer"></div>
 
   <div id="loadingScreen">
@@ -631,33 +899,33 @@ backdrop-filter: blur(15px);
   <div class="screen" id="mainPage">
     <div class="card">
       <div id="home">
-        <h1>Happy<br>7 Months ❤️</h1>
+        <h1>Happy<br />7 Months ❤️</h1>
         <p>Seven months of you, us, laughs, memories, and me being obsessed with you.</p>
       </div>
 
       <div id="proposal">
         <h2>Will you marry me?</h2>
-        <button id="yesBtn">Yes 💍</button>
+        <button id="yesBtn" type="button">Yes 💍</button>
       </div>
     </div>
   </div>
 
-  <button id="noBtn">No 😭</button>
+  <button id="noBtn" type="button">No 😭</button>
 
   <div id="modalWrap">
     <div class="modal">
-      <button id="closeModalBtn" class="closeModal">✕</button>
+      <button id="closeModalBtn" class="closeModal" type="button">✕</button>
       <h2>Marriage Contract 💗</h2>
       <p>Sign here to officially become my wife forever.</p>
       <canvas id="signature"></canvas>
 
       <div class="modalBtns">
-        <button id="clearSig">Clear</button>
-        <button id="submitSig">Sign</button>
+        <button id="clearSig" type="button">Clear</button>
+        <button id="submitSig" type="button">Sign</button>
       </div>
 
       <div id="finalMsg">Done. We are basically married now. ❤️</div>
-      <button id="continueToMemories">Continue to Memory Lane ❤️</button>
+      <button id="continueToMemories" type="button">Continue to Memory Lane ❤️</button>
     </div>
   </div>
 
@@ -668,13 +936,13 @@ backdrop-filter: blur(15px);
     </div>
 
     <div class="timeline">
-      <button class="monthPreview" data-month="0"><h2>Month 1 — The Start 💗</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="1"><h2>Month 2 — Getting Closer 💞</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="2"><h2>Month 3 — Our Chaos Era 💘</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="3"><h2>Month 4 — Feeling Like Home 💖</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="4"><h2>Month 5 — Through Everything ❤️‍🩹</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="5"><h2>Month 6 — Still You 💕</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
-      <button class="monthPreview" data-month="6"><h2>Month 7 — Right Now 💍</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="0"><h2>Month 1 — The Start 💗</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="1"><h2>Month 2 — Getting Closer 💞</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="2"><h2>Month 3 — Our Chaos Era 💘</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="3"><h2>Month 4 — Feeling Like Home 💖</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="4"><h2>Month 5 — Through Everything ❤️‍🩹</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="5"><h2>Month 6 — Still You 💕</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
+      <button class="monthPreview" type="button" data-month="6"><h2>Month 7 — Right Now 💍</h2><p>Tap to reveal the memory</p><div class="monthBadge">✨</div></button>
     </div>
 
     <div class="letterCard">
@@ -692,7 +960,6 @@ backdrop-filter: blur(15px);
 
     <div class="finalCard">
       <h1>And after all 7 months... ❤️</h1>
-
       <p>
         I would still choose you again.
 
@@ -705,23 +972,20 @@ backdrop-filter: blur(15px);
 
         Thank you for these 7 months.
       </p>
-
       <h2>I love you forever 💍</h2>
     </div>
   </section>
 
   <div id="monthModalWrap">
     <div class="monthModal">
-      <button id="closeMonthModal" class="closeModal">✕</button>
+      <button id="closeMonthModal" class="closeModal" type="button">✕</button>
       <h2 id="monthTitle"></h2>
       <div class="monthPicFrameWrapper">
         <div class="monthPicFrame">
           <div class="monthPicContainer">
             <div id="monthMediaBg" class="monthPicBg"></div>
-            <img id="monthImage" class="monthPic" src="" alt="month memory photo">
-              <video id="monthVideo" class="monthPic monthVideo" controls playsinline loop></video>
-
-
+            <img id="monthImage" class="monthPic" src="" alt="month memory photo" />
+            <video id="monthVideo" class="monthPic monthVideo" playsinline muted loop autoplay></video>
           </div>
         </div>
       </div>
@@ -729,16 +993,15 @@ backdrop-filter: blur(15px);
       <div id="month7SpecialCard"></div>
       <span id="monthTheme" class="themeTag"></span>
       <div id="voiceMessageContainer"></div>
-      <a id="monthSpotify" class="spotifyBtn" href="#" target="_blank">Open Playlist 🎧</a>
-      <button id="viewAlbumBtn" class="spotifyBtn">Open Album 📁</button>
+      <a id="monthSpotify" class="spotifyBtn" href="#" target="_blank" rel="noopener">Open Playlist 🎧</a>
+      <button id="viewAlbumBtn" class="spotifyBtn" type="button">Open Album 📁</button>
     </div>
   </div>
 
   <div id="albumModalWrap">
     <div class="albumModal">
-      <button id="closeAlbumModal" class="closeModal">✕</button>
+      <button id="closeAlbumModal" class="closeModal" type="button">✕</button>
       <h2 id="albumTitle"></h2>
-      
       <div id="albumGallery" class="albumGallery"></div>
     </div>
   </div>
@@ -765,108 +1028,59 @@ backdrop-filter: blur(15px);
     const albumGallery = document.getElementById("albumGallery");
     const loadingScreen = document.getElementById("loadingScreen");
     const loadingFill = document.getElementById("loadingFill");
-
     const bgMusic = document.getElementById("bgMusic");
-const BG_VOLUME = 0.35;
-let backgroundWasPlaying = false;
 
-let audioCtx;
-let bgSource;
-let bgGain;
-let bgGainFadeTimer;
+    let bgFadeInterval;
 
-function initBackgroundAudio() {
-  if (audioCtx) return;
+    function lowerBackgroundForVideo() {
+      clearInterval(bgFadeInterval);
 
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  bgSource = audioCtx.createMediaElementSource(bgMusic);
-  bgGain = audioCtx.createGain();
-  bgGain.gain.value = BG_VOLUME;
-
-  bgSource.connect(bgGain);
-  bgGain.connect(audioCtx.destination);
-}
-
-function fadeBackgroundTo(targetVolume, duration = 600) {
-  if (!bgGain) {
-    fadeMedia(bgMusic, targetVolume, duration);
-    return;
-  }
-
-  clearInterval(bgGainFadeTimer);
-
-  const startVolume = bgGain.gain.value;
-  const startTime = performance.now();
-
-  bgGainFadeTimer = setInterval(() => {
-    const progress = Math.min((performance.now() - startTime) / duration, 1);
-    bgGain.gain.value = startVolume + (targetVolume - startVolume) * progress;
-
-    if (progress >= 1) {
-      clearInterval(bgGainFadeTimer);
-      bgGain.gain.value = targetVolume;
+      bgFadeInterval = setInterval(() => {
+        if (bgMusic.volume > 0.18) {
+          bgMusic.volume = Math.max(
+            0.18,
+            bgMusic.volume - 0.04
+          );
+        } else {
+          clearInterval(bgFadeInterval);
+        }
+      }, 35);
     }
-  }, 30);
-}
 
+    function restoreBackgroundAfterVideo() {
+      clearInterval(bgFadeInterval);
 
-function fadeMedia(media, targetVolume, duration = 700, callback) {
-  clearInterval(media.fadeTimer);
-
-  const startVolume = media.volume;
-  const startTime = performance.now();
-
-  media.fadeTimer = setInterval(() => {
-    const progress = Math.min((performance.now() - startTime) / duration, 1);
-    media.volume = startVolume + (targetVolume - startVolume) * progress;
-
-    if (progress >= 1) {
-      clearInterval(media.fadeTimer);
-      media.volume = targetVolume;
-      if (callback) callback();
+      bgFadeInterval = setInterval(() => {
+        if (bgMusic.volume < 1) {
+          bgMusic.volume = Math.min(
+            1,
+            bgMusic.volume + 0.04
+          );
+        } else {
+          clearInterval(bgFadeInterval);
+        }
+      }, 35);
     }
-  }, 30);
-}
 
-function lowerBackgroundForVideo() {
-  if (!bgMusic.paused) {
-    fadeBackgroundTo(0.08, 500);
-  }
-}
+    function attachVideoAudioFade(video) {
+      video.addEventListener("play", () => {
+        document.querySelectorAll("video").forEach(v => {
+          if (v !== video) {
+            v.pause();
+          }
+        });
 
-function restoreBackgroundAfterVideo() {
-  if (!bgMusic.paused) {
-    fadeBackgroundTo(BG_VOLUME, 600);
-  }
-}
+        lowerBackgroundForVideo();
+      });
 
-function attachVideoAudioFade(video) {
-  video.addEventListener("play", lowerBackgroundForVideo);
-  video.addEventListener("pause", restoreBackgroundAfterVideo);
-  video.addEventListener("ended", restoreBackgroundAfterVideo);
-}
+      video.addEventListener("pause", () => {
+        restoreBackgroundAfterVideo();
+      });
 
-
-function lowerBackgroundForVoice() {
-  if (!bgMusic.paused) {
-    fadeBackgroundTo(0.12, 500);
-  }
-}
-
-function restoreBackgroundAfterVoice() {
-  if (!bgMusic.paused) {
-    fadeBackgroundTo(BG_VOLUME, 600);
-  }
-}
-
-
-function attachVoiceAudioFade(audio) {
-  audio.addEventListener("play", lowerBackgroundForVoice);
-  audio.addEventListener("pause", restoreBackgroundAfterVoice);
-  audio.addEventListener("ended", restoreBackgroundAfterVoice);
-}
-
-
+      video.addEventListener("ended", () => {
+        restoreBackgroundAfterVideo();
+      });
+    }
 
     const monthData = [
       {
@@ -880,7 +1094,7 @@ function attachVoiceAudioFade(audio) {
         albumItems: [
           { type: "image", src: "month1-1.jpg", alt: "Memory 1" },
           { type: "image", src: "month1-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "month1-1.mp4" }
+          { type: "video", src: "month1-1.mp4", alt: "Video 1" }
         ]
       },
       {
@@ -892,14 +1106,13 @@ function attachVoiceAudioFade(audio) {
         voiceMessage: "month2.mp3",
         albumTitle: "Month 2 Album",
         albumItems: [
-          { type: "video", src: "videos/month2-1.mp4" },
-          { type: "video", src: "videos/month2-2.mp4" },
-          { type: "video", src: "videos/month2-3.mp4" },
+          { type: "video", src: "videos/month2-1.mp4", alt: "Video 1" },
+          { type: "video", src: "videos/month2-2.mp4", alt: "Video 2" },
+          { type: "video", src: "videos/month2-3.mp4", alt: "Video 3" },
           { type: "image", src: "month2-1.jpg", alt: "Memory 1" },
           { type: "image", src: "month2-3.jpg", alt: "Memory 2" },
           { type: "image", src: "month2-4.jpg", alt: "Memory 3" },
-          { type: "image", src: "month2-5.jpg", alt: "Memory 4" },
-
+          { type: "image", src: "month2-5.jpg", alt: "Memory 4" }
         ]
       },
       {
@@ -913,7 +1126,7 @@ function attachVoiceAudioFade(audio) {
         albumItems: [
           { type: "image", src: "images/month3-1.jpg", alt: "Memory 1" },
           { type: "image", src: "images/month3-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "videos/month3-1.mp4", alt: "Video 1" },
+          { type: "video", src: "videos/month3-1.mp4", alt: "Video 1" }
         ]
       },
       {
@@ -927,7 +1140,7 @@ function attachVoiceAudioFade(audio) {
         albumItems: [
           { type: "image", src: "images/month4-1.jpg", alt: "Memory 1" },
           { type: "image", src: "images/month4-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "videos/month4-1.mp4" }
+          { type: "video", src: "videos/month4-1.mp4", alt: "Video 1" }
         ]
       },
       {
@@ -945,12 +1158,12 @@ function attachVoiceAudioFade(audio) {
           { type: "video", src: "month5-2.mp4", alt: "Memory 4" },
           { type: "video", src: "month5-3.mp4", alt: "Memory 5" },
           { type: "video", src: "month5-4.mp4", alt: "Memory 6" },
-          { type: "video", src: "month5-5.mp4", alt: "Memory 7" },
+          { type: "video", src: "month5-5.mp4", alt: "Memory 7" }
         ]
       },
       {
         title: "Month 6 — Still You 💕",
-        image: "month6-8.jpeg",
+        image: "month6.jpg",
         paragraph: "By this month, I already knew how much you meant to me. Even after all the time, it was still you I wanted to talk to, annoy, miss, and love.",
         theme: "Theme: Still Choosing You",
         spotify: "https://open.spotify.com/playlist/6ZcdUokO7u5ULWDoIoYTqo?si=W3TdF9rlT6iBEAevwaj8aQ",
@@ -958,28 +1171,18 @@ function attachVoiceAudioFade(audio) {
         albumTitle: "Month 6 Album",
         albumItems: [
           { type: "image", src: "images/month6-1.jpeg", alt: "Memory 1" },
-
           { type: "image", src: "images/month6-2.jpeg", alt: "Memory 2" },
-          
           { type: "image", src: "images/month6-3.jpeg", alt: "Memory 3" },
-
-
-
           { type: "image", src: "images/month6-5.jpeg", alt: "Memory 5" },
-
           { type: "image", src: "images/month6-6.jpeg", alt: "Memory 6" },
-
           { type: "image", src: "images/month6-7.jpeg", alt: "Memory 7" },
-
           { type: "image", src: "images/month6-8.jpeg", alt: "Memory 8" },
-
-          { type: "image", src: "images/month6-9.jpeg", alt: "Memory 9" },
-
+          { type: "image", src: "images/month6-9.jpeg", alt: "Memory 9" }
         ]
       },
       {
         title: "Month 7 — Right Now 💍",
-        image: "month7.jpeg",
+        image: "month7.jpg",
         paragraph: `bro reading all this honestly hurt me but in a good way 😭 like i genuinely didnt know how much was going on in ur head this whole time and i think i was so focused on what changed that i stopped seeing why things changed in the first place
 
 and first of all i need u to stop thinking i dont appreciate u because i genuinely do, like more than i even know how to explain sometimes. even when i get upset and start overthinking everything, i never forget everything u have done for me and how much love u gave me from the start. thats literally why i got so scared when things started feeling different because i knew how good we used to be and i missed it so badly
@@ -1014,47 +1217,100 @@ i love u alot bro like genuinely too much 😭 and i still get excited over u to
 
 so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH NGA LIKE i fuxking love u z`,
         theme: "Theme: My Favourite Person",
-
-
-        
+        spotify: "",
+        voiceMessage: "month7.mp3",
+        albumTitle: "Month 7 Album",
+        albumItems: [
+          { type: "image", src: "month7.jpg", alt: "Memory 1" }
+        ]
       }
     ];
 
     const hearts = [];
     const symbols = ["❤️", "💕", "💗", "💖", "💘", "💞"];
+    const openedMonths = new Set();
     let currentMonthIndex = 0;
+    let currentLightboxItems = [];
     let currentAlbumIndex = 0;
-
-    let voiceLikeTouches = 0;
     let voiceLikeTimer = null;
     let noActive = false;
     let noX = 0;
     let noY = 0;
     let noVX = 3;
     let noVY = 2;
+    let scrollYBeforeModal = 0;
 
     function rand(min, max) {
       return Math.random() * (max - min) + min;
     }
 
-    function normalizeMediaPath(src) {
-      return (src || "").replace(/^(?:\.\/)?(?:images|videos)\//i, "");
+    function lockBody() {
+      scrollYBeforeModal = window.scrollY || document.documentElement.scrollTop || 0;
+      document.body.style.top = `-${scrollYBeforeModal}px`;
+      document.body.classList.add("modal-open");
     }
 
+    function unlockBody() {
+      document.body.classList.remove("modal-open");
+      document.body.style.top = "";
+      window.scrollTo(0, scrollYBeforeModal);
+    }
+
+    function getFileName(path) {
+      return String(path || "").split("/").pop();
+    }
+
+    function getPathCandidates(src) {
+      const raw = String(src || "").trim();
+      if (!raw) return [];
+      if (/^(https?:)?\/\//i.test(raw) || raw.startsWith("data:") || raw.startsWith("blob:")) return [raw];
+
+      const clean = raw.replace(/^\.?\//, "");
+      const fileName = getFileName(clean);
+      const candidates = [clean];
+
+      if (!clean.startsWith("images/")) candidates.push(`images/${fileName}`);
+      if (!clean.startsWith("videos/")) candidates.push(`videos/${fileName}`);
+
+      return [...new Set(candidates)];
+    }
+
+    function withFallbackMedia(el, src) {
+      const candidates = getPathCandidates(src);
+      let index = 0;
+      el.dataset.candidates = JSON.stringify(candidates);
+      el.onerror = () => {
+        index += 1;
+        if (index < candidates.length) {
+          el.src = candidates[index];
+        } else {
+          el.onerror = null;
+        }
+      };
+      el.src = candidates[0] || "";
+      return candidates[0] || "";
+    }
+
+    function setBackgroundWithFallback(el, src) {
+      const first = getPathCandidates(src)[0];
+      el.style.backgroundImage = first ? `url("${first}")` : "none";
+      el.style.backgroundColor = first ? "transparent" : "rgba(255, 245, 250, 0.10)";
+    }
 
     function makeHearts() {
-      for (let i = 0; i < 28; i++) {
+      const count = Math.min(28, Math.max(14, Math.floor((innerWidth * innerHeight) / 26000)));
+      for (let i = 0; i < count; i++) {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         const size = rand(22, 48);
-        heart.style.fontSize = size + "px";
+        heart.style.fontSize = `${size}px`;
         heartLayer.appendChild(heart);
 
         hearts.push({
           el: heart,
-          x: rand(0, innerWidth - size),
-          y: rand(0, innerHeight - size),
+          x: rand(0, Math.max(1, innerWidth - size)),
+          y: rand(0, Math.max(1, innerHeight - size)),
           vx: rand(-1.5, 1.5) || 1,
           vy: rand(-1.5, 1.5) || -1,
           size
@@ -1135,34 +1391,34 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
       noBtn.style.display = "block";
 
       const yesRect = yesBtn.getBoundingClientRect();
-      noX = yesRect.right + 15;
+      noX = Math.min(yesRect.right + 15, innerWidth - noBtn.offsetWidth - 8);
       noY = yesRect.top;
       noActive = true;
     }, 2200);
 
     document.addEventListener("mousemove", e => moveNoAwayFrom(e.clientX, e.clientY));
-    document.addEventListener("touchstart", e => { const t = e.touches[0]; moveNoAwayFrom(t.clientX, t.clientY); }, { passive: true });
-    document.addEventListener("touchmove", e => { const t = e.touches[0]; moveNoAwayFrom(t.clientX, t.clientY); }, { passive: true });
-    noBtn.addEventListener("click", e => { e.preventDefault(); noVX += rand(-10, 10); noVY += rand(-10, 10); });
+    document.addEventListener("touchstart", e => {
+      const t = e.touches[0];
+      if (t) moveNoAwayFrom(t.clientX, t.clientY);
+    }, { passive: true });
+    document.addEventListener("touchmove", e => {
+      const t = e.touches[0];
+      if (t) moveNoAwayFrom(t.clientX, t.clientY);
+    }, { passive: true });
+    noBtn.addEventListener("click", e => {
+      e.preventDefault();
+      noVX += rand(-10, 10);
+      noVY += rand(-10, 10);
+    });
 
     yesBtn.addEventListener("click", () => {
-
-    initBackgroundAudio();
-
-if (audioCtx.state === "suspended") {
-  audioCtx.resume();
-}
-
-bgMusic.volume = 1;
-fadeBackgroundTo(BG_VOLUME, 0);
-bgMusic.play().catch(() => {});
-
-
       modalWrap.style.display = "flex";
       setTimeout(resizeCanvas, 50);
     });
 
-    document.getElementById("closeModalBtn").addEventListener("click", () => { modalWrap.style.display = "none"; });
+    document.getElementById("closeModalBtn").addEventListener("click", () => {
+      modalWrap.style.display = "none";
+    });
 
     document.getElementById("continueToMemories").addEventListener("click", () => {
       modalWrap.style.display = "none";
@@ -1181,18 +1437,21 @@ bgMusic.play().catch(() => {});
       const container = document.getElementById("voiceLikeContainer");
       const counter = document.getElementById("voiceLikeCounter");
       if (!container || !counter) return;
-      let likes = parseInt(localStorage.getItem(`voiceLike_${monthNum}`) || "0");
+
+      let likes = parseInt(localStorage.getItem(`voiceLike_${monthNum}`) || "0", 10);
       counter.textContent = likes;
       container.onclick = () => {
         if (voiceLikeTimer === null) {
           voiceLikeTimer = setTimeout(() => { voiceLikeTimer = null; }, 300);
           return;
         }
+
         clearTimeout(voiceLikeTimer);
         voiceLikeTimer = null;
         likes += 1;
         counter.textContent = likes;
         localStorage.setItem(`voiceLike_${monthNum}`, likes);
+
         const heart = document.createElement("div");
         heart.className = "voiceHeartStack";
         heart.textContent = "❤️";
@@ -1202,251 +1461,222 @@ bgMusic.play().catch(() => {});
       };
     }
 
+    function openMonth(idx, btn) {
+      currentMonthIndex = idx;
+      const data = monthData[idx];
+      const monthImage = document.getElementById("monthImage");
+      const monthVideo = document.getElementById("monthVideo");
+      const monthMediaBg = document.getElementById("monthMediaBg");
+
+      if (data.video) {
+        withFallbackMedia(monthVideo, data.video);
+        monthVideo.muted = false;
+        monthVideo.volume = 1;
+        monthVideo.loop = true;
+        monthVideo.playsInline = true;
+        monthVideo.style.display = "block";
+        monthVideo.currentTime = 0;
+        monthVideo.load();
+        attachVideoAudioFade(monthVideo);
+        monthVideo.play().catch(() => {});
+
+        monthImage.style.display = "none";
+        monthImage.removeAttribute("src");
+        monthMediaBg.style.backgroundImage = "none";
+        monthMediaBg.style.backgroundColor = "rgba(255, 245, 250, 0.10)";
+      } else {
+        withFallbackMedia(monthImage, data.image || "");
+        monthImage.style.display = "block";
+
+        monthVideo.pause();
+        monthVideo.removeAttribute("src");
+        monthVideo.load();
+        monthVideo.style.display = "none";
+
+        setBackgroundWithFallback(monthMediaBg, data.image || "");
+      }
+
+      document.getElementById("monthTitle").textContent = data.title;
+      document.getElementById("monthParagraph").textContent = data.paragraph;
+
+      const specialCard = document.getElementById("month7SpecialCard");
+      if (idx === 6) {
+        specialCard.innerHTML = `
+          <div class="loveLetterCard">
+            <p>
+              Seven months later, and somehow you still make my heart feel the same way it did at the start.
+
+              Through every phase, every argument, every laugh, every late night, every moment of missing you,
+              and every moment of finally being with you again… you still became my favourite person.
+
+              Thank you for staying.
+              Thank you for loving me.
+              Thank you for being home to me.
+
+              And honestly?
+              I still choose you.
+              Every single time. ❤️
+            </p>
+
+            <div class="floatingHearts">
+              <span>❤️</span>
+              <span>💖</span>
+              <span>💕</span>
+              <span>❤️</span>
+              <span>💗</span>
+            </div>
+          </div>
+        `;
+      } else {
+        specialCard.innerHTML = "";
+      }
+
+      document.getElementById("monthTheme").textContent = data.theme;
+      const spotifyLink = document.getElementById("monthSpotify");
+      if (data.spotify) {
+        spotifyLink.href = data.spotify;
+        spotifyLink.style.display = "inline-block";
+      } else {
+        spotifyLink.style.display = "none";
+      }
+
+      const voiceContainer = document.getElementById("voiceMessageContainer");
+      voiceContainer.innerHTML = `
+        <div class="voiceMessageBox">
+          <audio controls preload="metadata"></audio>
+          <div id="voiceLikeContainer" aria-label="Like this voice message" role="button" tabindex="0">
+            <div id="voiceLikeCounter">0</div>
+          </div>
+        </div>
+      `;
+      withFallbackMedia(voiceContainer.querySelector("audio"), data.voiceMessage);
+      initializeVoiceLike(idx);
+
+      if (data.albumTitle && Array.isArray(data.albumItems) && data.albumItems.length) {
+        viewAlbumBtn.style.display = "block";
+        viewAlbumBtn.textContent = "Open Album 📁";
+      } else {
+        viewAlbumBtn.style.display = "none";
+      }
+
+      openedMonths.add(String(idx));
+      btn.classList.add("unlocked");
+      showAchievement(`Month ${idx + 1} Unlocked! 📅`, "📅");
+
+      if (openedMonths.size === 7 && document.querySelector(".finalCard").style.display !== "block") {
+        setTimeout(() => {
+          document.querySelector(".finalCard").style.display = "block";
+          launchConfetti();
+          showAchievement("All Memories Unlocked! 🎉", "🎉");
+        }, 600);
+      }
+
+      monthModalWrap.style.display = "flex";
+    }
+
     document.querySelectorAll(".monthPreview").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const idx = Number(btn.dataset.month);
-        currentMonthIndex = idx;
-        const data = monthData[idx];
-
-        const monthImage = document.getElementById("monthImage");
-        const monthVideo = document.getElementById("monthVideo");
-        const monthMediaBg = document.getElementById("monthMediaBg");
-
-        if (data.video) {
-          monthVideo.src = normalizeMediaPath(data.video);
-
-          monthVideo.muted = false;
-          monthVideo.volume = 1;
-
-          monthVideo.loop = true;
-          monthVideo.playsInline = true;
-          monthVideo.style.display = "block";
-          monthVideo.style.width = "auto";
-          monthVideo.style.height = "auto";
-          monthVideo.currentTime = 0;
-monthVideo.preload = "metadata";
-monthVideo.load();
-
-if (!monthVideo.dataset.fadeReady) {
-  attachVideoAudioFade(monthVideo);
-  monthVideo.dataset.fadeReady = "true";
-}
-
-
-
-
-          monthImage.style.display = "none";
-          monthImage.removeAttribute("src");
-
-          monthMediaBg.style.backgroundImage = "none";
-          monthMediaBg.style.backgroundColor = "rgba(255, 245, 250, 0.10)";
-        } else {
-          monthImage.src = normalizeMediaPath(data.image || "");
-
-          monthImage.style.display = "block";
-
-          monthVideo.pause();
-          monthVideo.removeAttribute("src");
-          monthVideo.style.display = "none";
-
-          monthMediaBg.style.backgroundImage = `url(${normalizeMediaPath(data.image)})`;
-
-          monthMediaBg.style.backgroundColor = "transparent";
-        }
-
-        document.getElementById("monthTitle").textContent = data.title;
-        document.getElementById("monthParagraph").textContent = data.paragraph;
-        const specialCard = document.getElementById("month7SpecialCard");
-
-if (idx === 6) {
-  specialCard.innerHTML = `
-    <div class="loveLetterCard">
-      <p>
-        Seven months later, and somehow you still make my heart feel the same way it did at the start.
-
-        Through every phase, every argument, every laugh, every late night, every moment of missing you,
-        and every moment of finally being with you again… you still became my favourite person.
-
-        Thank you for staying.
-        Thank you for loving me.
-        Thank you for being home to me.
-
-        And honestly?
-        I still choose you.
-        Every single time. ❤️
-      </p>
-
-      <div class="floatingHearts">
-        <span>❤️</span>
-        <span>💖</span>
-        <span>💕</span>
-        <span>❤️</span>
-        <span>💗</span>
-      </div>
-    </div>
-  `;
-} else {
-  specialCard.innerHTML = "";
-}
-        document.getElementById("monthTheme").textContent = data.theme;
-        const spotifyBtn = document.getElementById("monthSpotify");
-
-if (data.spotify && !data.spotify.includes("PASTE_")) {
-  spotifyBtn.href = data.spotify;
-  spotifyBtn.style.display = "inline-block";
-} else {
-  spotifyBtn.style.display = "none";
-}
-
-
-const voiceContainer = document.getElementById("voiceMessageContainer");
-
-if (data.voiceMessage) {
-voiceContainer.innerHTML = `
-  <div class="voiceMessageBox">
-    <audio id="monthVoiceMessage" controls src="${normalizeMediaPath(data.voiceMessage)}"></audio>
-
-    <div id="voiceLikeContainer">
-      <div id="voiceLikeCounter">0</div>
-    </div>
-  </div>
-`;
-
-const voiceAudio = document.getElementById("monthVoiceMessage");
-attachVoiceAudioFade(voiceAudio);
-initializeVoiceLike(idx);
-
-} else {
-  voiceContainer.innerHTML = "";
-}
-
-
-        if (data.albumTitle) {
-          viewAlbumBtn.style.display = "block";
-          viewAlbumBtn.textContent = "Open Album 📁";
-        } else {
-          viewAlbumBtn.style.display = "none";
-        }
-
-        monthModalWrap.style.display = "flex";
-      });
+      btn.addEventListener("click", () => openMonth(Number(btn.dataset.month), btn));
     });
 
-function closeMonthMemory() {
-  const voiceAudio = document.getElementById("monthVoiceMessage");
-  if (voiceAudio) {
-    voiceAudio.pause();
-    voiceAudio.currentTime = 0;
-  }
+    closeMonthModal.addEventListener("click", closeMonth);
+    monthModalWrap.addEventListener("click", e => {
+      if (e.target === monthModalWrap) closeMonth();
+    });
 
-  const monthVideo = document.getElementById("monthVideo");
-  if (monthVideo) {
-    monthVideo.pause();
-  }
+    function closeMonth() {
+      restoreBackgroundAfterVideo();
 
-  restoreBackgroundAfterVideo();
-restoreBackgroundAfterVoice();
-monthModalWrap.style.display = "none";
+      document.querySelectorAll("video").forEach(v => {
+        v.pause();
+      });
 
-  monthModalWrap.style.display = "none";
-}
+      const monthVideo = document.getElementById("monthVideo");
+      monthVideo.pause();
+      monthModalWrap.style.display = "none";
+    }
 
-
-closeMonthModal.addEventListener("click", closeMonthMemory);
-monthModalWrap.addEventListener("click", (e) => {
-  if (e.target === monthModalWrap) closeMonthMemory();
-});
-
+    function getItemType(item) {
+      if (item.type) return item.type;
+      const src = typeof item === "string" ? item : item.src || "";
+      const ext = getFileName(src).split(".").pop().toLowerCase();
+      return ["mp4", "webm", "ogg", "mov", "m4v"].includes(ext) ? "video" : "image";
+    }
 
     function buildAlbumGallery(albumItems) {
-      // normalize paths to be relative to index.html (remove images/ or videos/ prefixes)
       albumGallery.innerHTML = "";
       if (!Array.isArray(albumItems) || albumItems.length === 0) {
         albumGallery.innerHTML = "<p style='opacity:.9'>No media</p>";
         return;
       }
-      albumItems.forEach((item, i) => {
-        // allow either { src: "...", type: "image" } or simple string entries
-        const srcRaw = typeof item === "string" ? item : (item.src || "");
-        const normalized = normalizeMediaPath(srcRaw);
 
-        const ext = normalized.split(".").pop().toLowerCase();
+      albumItems.forEach((item, i) => {
+        const srcRaw = typeof item === "string" ? item : item.src || "";
+        const type = getItemType(item);
         const wrap = document.createElement("div");
         wrap.className = "mediaWrap";
         wrap.setAttribute("data-index", i);
-        if (["mp4","webm","ogg"].includes(ext)) {
+
+        if (type === "video") {
           const vid = document.createElement("video");
+          attachVideoAudioFade(vid);
           vid.className = "albumVideo";
           vid.controls = true;
           vid.preload = "metadata";
-          vid.src = normalized;
-vid.setAttribute("playsinline", "");
-vid.preload = "metadata";
-attachVideoAudioFade(vid);
-vid.addEventListener("click", (e) => e.stopPropagation());
-
-wrap.appendChild(vid);
-
+          vid.setAttribute("playsinline", "");
+          withFallbackMedia(vid, srcRaw);
+          wrap.appendChild(vid);
         } else {
           const img = document.createElement("img");
           img.className = "albumPhoto";
-          img.src = normalized;
-          img.alt = `memory-${i+1}`;
+          img.alt = item.alt || `Memory ${i + 1}`;
           img.loading = "lazy";
+          withFallbackMedia(img, srcRaw);
           wrap.appendChild(img);
         }
-        // optional click to open lightbox if implemented
-        wrap.addEventListener("click", (e) => {
-          const idx = Number(wrap.getAttribute("data-index"));
-          if (typeof openLightbox === "function") openLightbox(albumItems, idx);
-        });
+
+        wrap.addEventListener("click", () => openLightbox(albumItems, i));
         albumGallery.appendChild(wrap);
       });
     }
 
     function openAlbum(button, data) {
       if (!data) return;
-      // fill title using albumTitle (fall back to generic title)
-      if (albumTitle) albumTitle.textContent = data.albumTitle || data.title || "Album";
-      // build gallery using the correct property name from monthData
+      albumTitle.textContent = data.albumTitle || data.title || "Album";
       buildAlbumGallery(data.albumItems || []);
-      // show overlay fixed above everything
       albumModalWrap.style.display = "flex";
-      // ensure albumModalWrap is highest stacking context and body doesn't scroll
-      document.body.style.overflow = "hidden";
-      // small timeout to allow animation class
+      lockBody();
       requestAnimationFrame(() => albumModal.classList.add("show"));
     }
 
     function closeAlbum() {
-  albumGallery.querySelectorAll("video").forEach(video => {
-    video.pause();
-    video.currentTime = 0;
-  });
+      if (albumModalWrap.style.display !== "flex") return;
+      restoreBackgroundAfterVideo();
 
-  restoreBackgroundAfterVideo();
+      document.querySelectorAll("video").forEach(v => {
+        v.pause();
+      });
 
-  albumModal.classList.remove("show");
-  albumModal.classList.add("reverse-close");
+      closeLightbox();
+      albumModal.classList.remove("show");
+      albumModal.classList.add("reverse-close");
 
-  setTimeout(() => {
-    albumModal.classList.remove("reverse-close");
-    albumModalWrap.style.display = "none";
-    document.body.style.overflow = "";
-    albumGallery.innerHTML = "";
-  }, 260);
-}
-
+      setTimeout(() => {
+        albumModal.classList.remove("reverse-close");
+        albumModalWrap.style.display = "none";
+        unlockBody();
+        albumGallery.querySelectorAll("video").forEach(video => video.pause());
+        albumGallery.innerHTML = "";
+      }, 260);
+    }
 
     function openLightbox(albumItems, startIndex) {
-      // Create lightbox if it doesn't exist
       let lightboxWrap = document.getElementById("lightboxWrap");
       if (!lightboxWrap) {
         lightboxWrap = document.createElement("div");
         lightboxWrap.id = "lightboxWrap";
         lightboxWrap.innerHTML = `
           <div class="lightboxContent">
-            <button class="lightboxClose">✕</button>
+            <button class="lightboxClose" type="button">✕</button>
             <div id="lightboxMediaContainer"></div>
             <div class="lightboxNav" id="lightboxNav"></div>
           </div>
@@ -1454,58 +1684,57 @@ wrap.appendChild(vid);
         document.body.appendChild(lightboxWrap);
 
         lightboxWrap.querySelector(".lightboxClose").addEventListener("click", closeLightbox);
-        lightboxWrap.addEventListener("click", (e) => {
+        lightboxWrap.addEventListener("click", e => {
           if (e.target === lightboxWrap) closeLightbox();
         });
       }
 
+      currentLightboxItems = albumItems;
       currentAlbumIndex = startIndex;
-      displayLightboxMedia(albumItems, startIndex);
-      updateLightboxNav(albumItems, startIndex);
+      displayLightboxMedia(startIndex);
+      updateLightboxNav(startIndex);
       lightboxWrap.classList.add("show");
     }
 
-    function displayLightboxMedia(albumItems, index) {
+    function displayLightboxMedia(index) {
       const container = document.getElementById("lightboxMediaContainer");
-      const item = albumItems[index];
+      const item = currentLightboxItems[index];
+      const srcRaw = typeof item === "string" ? item : item.src || "";
+      const type = getItemType(item);
 
       container.innerHTML = "";
 
-      if (item.type === "image") {
+      if (type === "video") {
+        const video = document.createElement("video");
+        attachVideoAudioFade(video);
+        video.className = "lightboxMedia";
+        video.controls = true;
+        video.playsInline = true;
+        video.muted = false;
+        video.volume = 1;
+        video.autoplay = false;
+        withFallbackMedia(video, srcRaw);
+        container.appendChild(video);
+      } else {
         const img = document.createElement("img");
         img.className = "lightboxMedia";
-        img.src = normalizeMediaPath(item.src);
-
         img.alt = item.alt || "Full size photo";
+        withFallbackMedia(img, srcRaw);
         container.appendChild(img);
-      } else if (item.type === "video") {
-        const video = document.createElement("video");
-        video.className = "lightboxMedia";
-        video.src = normalizeMediaPath(item.src);
-
-        video.controls = true;
-        video.playsinline = true;
-        video.muted = false;
-
-        video.autoplay = false;
-video.volume = 1;
-attachVideoAudioFade(video);
-container.appendChild(video);
-
       }
     }
 
-    function updateLightboxNav(albumItems, index) {
+    function updateLightboxNav(index) {
       const nav = document.getElementById("lightboxNav");
       nav.innerHTML = "";
 
-      albumItems.forEach((_, i) => {
+      currentLightboxItems.forEach((_, i) => {
         const dot = document.createElement("div");
-        dot.className = "lightboxDot" + (i === index ? " active" : "");
+        dot.className = `lightboxDot${i === index ? " active" : ""}`;
         dot.addEventListener("click", () => {
           currentAlbumIndex = i;
-          displayLightboxMedia(albumItems, i);
-          updateLightboxNav(albumItems, i);
+          displayLightboxMedia(i);
+          updateLightboxNav(i);
         });
         nav.appendChild(dot);
       });
@@ -1513,44 +1742,34 @@ container.appendChild(video);
 
     function closeLightbox() {
       const lightboxWrap = document.getElementById("lightboxWrap");
-      if (lightboxWrap) {
-        lightboxWrap.classList.remove("show");
-        setTimeout(() => {
-          const container = document.getElementById("lightboxMediaContainer");
-          if (container) {
-            const video = container.querySelector("video");
-            if (video) {
-              video.pause();
-              video.currentTime = 0;
-            }
-            container.innerHTML = "";
-          }
-        }, 300);
+      if (!lightboxWrap) return;
+
+      lightboxWrap.classList.remove("show");
+      const container = document.getElementById("lightboxMediaContainer");
+      if (container) {
+        const video = container.querySelector("video");
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+        container.innerHTML = "";
       }
     }
 
     viewAlbumBtn.addEventListener("click", () => openAlbum(viewAlbumBtn, monthData[currentMonthIndex]));
     closeAlbumModal.addEventListener("click", closeAlbum);
-    albumModalWrap.addEventListener("click", (e) => { if (e.target === albumModalWrap) closeAlbum(); });
+    albumModalWrap.addEventListener("click", e => {
+      if (e.target === albumModalWrap) closeAlbum();
+    });
 
-    document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    closeLightbox();
-
-    if (albumModalWrap.style.display === "flex") {
-      closeAlbum();
-    }
-
-    if (monthModalWrap.style.display === "flex") {
-  closeMonthMemory();
-}
-
-    if (modalWrap.style.display === "flex") {
-      modalWrap.style.display = "none";
-    }
-  }
-});
-
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        closeLightbox();
+        closeAlbum();
+        if (monthModalWrap.style.display === "flex") closeMonth();
+        if (modalWrap.style.display === "flex") modalWrap.style.display = "none";
+      }
+    });
 
     const canvas = document.getElementById("signature");
     const ctx = canvas.getContext("2d");
@@ -1560,8 +1779,8 @@ container.appendChild(video);
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
       const ratio = window.devicePixelRatio || 1;
-      canvas.width = rect.width * ratio;
-      canvas.height = rect.height * ratio;
+      canvas.width = Math.max(1, rect.width * ratio);
+      canvas.height = Math.max(1, rect.height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       ctx.lineWidth = 3;
       ctx.lineCap = "round";
@@ -1603,6 +1822,8 @@ container.appendChild(video);
     canvas.addEventListener("touchstart", startDraw, { passive: false });
     canvas.addEventListener("touchmove", draw, { passive: false });
     canvas.addEventListener("touchend", stopDraw);
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("orientationchange", () => setTimeout(resizeCanvas, 250));
 
     document.getElementById("clearSig").addEventListener("click", () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1626,9 +1847,8 @@ container.appendChild(video);
       msg.style.display = "block";
     });
 
-    const openedMonths = new Set();
-
     function showMemoryLoadingSequence() {
+      loadingFill.style.width = "0%";
       loadingScreen.style.display = "flex";
       let progress = 0;
       const interval = setInterval(() => {
@@ -1638,36 +1858,17 @@ container.appendChild(video);
           clearInterval(interval);
           setTimeout(() => { loadingScreen.style.display = "none"; }, 300);
         }
-        loadingFill.style.width = progress + "%";
+        loadingFill.style.width = `${progress}%`;
       }, 140);
     }
 
-    document.querySelectorAll(".monthPreview").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const monthNum = btn.dataset.month;
-        openedMonths.add(monthNum);
-        btn.classList.add("unlocked");
-
-        showAchievement(`Month ${parseInt(monthNum) + 1} Unlocked! 📅`, "📅");
-
-        if (openedMonths.size === 7) {
-          setTimeout(() => {
-            document.querySelector(".finalCard").style.display = "block";
-            launchConfetti();
-            showAchievement("All Memories Unlocked! 🎉", "🎉");
-          }, 600);
-        }
-      });
-    });
-
-    const startDate = new Date("2025-10-15");
+    const startDate = new Date("2025-10-15T00:00:00");
 
     function updateCountdown() {
       const now = new Date();
       const diff = now - startDate;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      document.getElementById("countdown").textContent =
-        `Together for ${days} days ❤️`;
+      const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+      document.getElementById("countdown").textContent = `Together for ${days} days ❤️`;
     }
 
     updateCountdown();
@@ -1679,9 +1880,9 @@ container.appendChild(video);
         const confetti = document.createElement("div");
         confetti.className = "confetti";
         confetti.textContent = ["🎉", "❤️", "💕", "✨"][Math.floor(Math.random() * 4)];
-        confetti.style.left = Math.random() * 100 + "%";
+        confetti.style.left = `${Math.random() * 100}%`;
         confetti.style.top = "-20px";
-        confetti.style.fontSize = Math.random() * 20 + 20 + "px";
+        confetti.style.fontSize = `${Math.random() * 20 + 20}px`;
         confetti.style.opacity = Math.random() * 0.8 + 0.3;
         document.body.appendChild(confetti);
 
@@ -1710,24 +1911,24 @@ container.appendChild(video);
       panel.appendChild(box);
       setTimeout(() => {
         box.style.animation = "slideInRight 0.5s ease reverse";
-        setTimeout(() => box.remove(), 500);
+        setTimeout(() => {
+          box.remove();
+          if (!panel.children.length) panel.style.display = "none";
+        }, 500);
       }, 2500);
     }
 
     let keysPressed = [];
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
       keysPressed.push(e.key.toLowerCase());
       keysPressed = keysPressed.slice(-6);
-
       if (keysPressed.join("") === "iloveu") {
         showEasterEgg();
         keysPressed = [];
       }
     });
 
-    document.getElementById("easterEggHint").addEventListener("click", () => {
-      showEasterEgg();
-    });
+    document.getElementById("easterEggHint").addEventListener("click", showEasterEgg);
 
     function showEasterEgg() {
       const wrap = document.createElement("div");
@@ -1740,6 +1941,7 @@ container.appendChild(video);
       wrap.style.padding = "20px";
       wrap.style.background = "rgba(100, 0, 50, 0.5)";
       wrap.style.backdropFilter = "blur(10px)";
+      wrap.style.webkitBackdropFilter = "blur(10px)";
 
       const modal = document.createElement("div");
       modal.className = "easterEggModal";
@@ -1748,8 +1950,9 @@ container.appendChild(video);
         <p>Every moment with you feels like a secret I get to keep.</p>
         <p>Thank you for being my favorite person to do nothing with.</p>
         <p style="font-weight: bold; margin-top: 14px;">You make my life magical. 💫</p>
-        <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 14px; width: 100%; background: #ff5f9e; color: white; border: none; padding: 12px; border-radius: 999px; cursor: pointer;">Close</button>
+        <button type="button" style="margin-top: 14px; width: 100%; background: #ff5f9e; color: white; border: none; padding: 12px; border-radius: 999px; cursor: pointer;">Close</button>
       `;
+      modal.querySelector("button").addEventListener("click", () => wrap.remove());
       wrap.appendChild(modal);
       document.body.appendChild(wrap);
       launchConfetti();
