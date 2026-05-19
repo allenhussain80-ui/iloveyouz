@@ -22,7 +22,6 @@
 
     body.modal-open {
       overflow: hidden;
-      position: fixed;
       width: 100%;
     }
 
@@ -880,7 +879,7 @@
 </head>
 
 <body>
-  <audio id="bgMusic" loop autoplay preload="auto">
+  <audio id="bgMusic" loop preload="auto">
     <source src="background.mp3" type="audio/mpeg" />
   </audio>
 
@@ -1063,6 +1062,9 @@
     }
 
     function attachVideoAudioFade(video) {
+      if (video.dataset.audioFadeReady === "true") return;
+      video.dataset.audioFadeReady = "true";
+
       video.addEventListener("play", () => {
         document.querySelectorAll("video").forEach(v => {
           if (v !== video) {
@@ -1070,7 +1072,9 @@
           }
         });
 
-        lowerBackgroundForVideo();
+        if (!video.muted) {
+          lowerBackgroundForVideo();
+        }
       });
 
       video.addEventListener("pause", () => {
@@ -1080,6 +1084,11 @@
       video.addEventListener("ended", () => {
         restoreBackgroundAfterVideo();
       });
+    }
+
+    function isIPhoneSafariLike() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     }
 
     const monthData = [
@@ -1106,9 +1115,9 @@
         voiceMessage: "month2.mp3",
         albumTitle: "Month 2 Album",
         albumItems: [
-          { type: "video", src: "videos/month2-1.mp4", alt: "Video 1" },
-          { type: "video", src: "videos/month2-2.mp4", alt: "Video 2" },
-          { type: "video", src: "videos/month2-3.mp4", alt: "Video 3" },
+          { type: "video", src: "month2-1.mp4", alt: "Video 1" },
+          { type: "video", src: "month2-2.mp4", alt: "Video 2" },
+          { type: "video", src: "month2-3.mp4", alt: "Video 3" },
           { type: "image", src: "month2-1.jpg", alt: "Memory 1" },
           { type: "image", src: "month2-3.jpg", alt: "Memory 2" },
           { type: "image", src: "month2-4.jpg", alt: "Memory 3" },
@@ -1124,9 +1133,9 @@
         voiceMessage: "month3.mp3",
         albumTitle: "Month 3 Album",
         albumItems: [
-          { type: "image", src: "images/month3-1.jpg", alt: "Memory 1" },
-          { type: "image", src: "images/month3-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "videos/month3-1.mp4", alt: "Video 1" }
+          { type: "image", src: "month3-1.jpg", alt: "Memory 1" },
+          { type: "image", src: "month3-2.jpg", alt: "Memory 2" },
+          { type: "video", src: "month3-1.mp4", alt: "Video 1" }
         ]
       },
       {
@@ -1138,9 +1147,9 @@
         voiceMessage: "month4.mp3",
         albumTitle: "Month 4 Album",
         albumItems: [
-          { type: "image", src: "images/month4-1.jpg", alt: "Memory 1" },
-          { type: "image", src: "images/month4-2.jpg", alt: "Memory 2" },
-          { type: "video", src: "videos/month4-1.mp4", alt: "Video 1" }
+          { type: "image", src: "month4-1.jpg", alt: "Memory 1" },
+          { type: "image", src: "month4-2.jpg", alt: "Memory 2" },
+          { type: "video", src: "month4-1.mp4", alt: "Video 1" }
         ]
       },
       {
@@ -1170,14 +1179,14 @@
         voiceMessage: "month6.mp3",
         albumTitle: "Month 6 Album",
         albumItems: [
-          { type: "image", src: "images/month6-1.jpeg", alt: "Memory 1" },
-          { type: "image", src: "images/month6-2.jpeg", alt: "Memory 2" },
-          { type: "image", src: "images/month6-3.jpeg", alt: "Memory 3" },
-          { type: "image", src: "images/month6-5.jpeg", alt: "Memory 5" },
-          { type: "image", src: "images/month6-6.jpeg", alt: "Memory 6" },
-          { type: "image", src: "images/month6-7.jpeg", alt: "Memory 7" },
-          { type: "image", src: "images/month6-8.jpeg", alt: "Memory 8" },
-          { type: "image", src: "images/month6-9.jpeg", alt: "Memory 9" }
+          { type: "image", src: "month6-1.jpeg", alt: "Memory 1" },
+          { type: "image", src: "month6-2.jpeg", alt: "Memory 2" },
+          { type: "image", src: "month6-3.jpeg", alt: "Memory 3" },
+          { type: "image", src: "month6-5.jpeg", alt: "Memory 5" },
+          { type: "image", src: "month6-6.jpeg", alt: "Memory 6" },
+          { type: "image", src: "month6-7.jpeg", alt: "Memory 7" },
+          { type: "image", src: "month6-8.jpeg", alt: "Memory 8" },
+          { type: "image", src: "month6-9.jpeg", alt: "Memory 9" }
         ]
       },
       {
@@ -1267,10 +1276,7 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
 
       const clean = raw.replace(/^\.?\//, "");
       const fileName = getFileName(clean);
-      const candidates = [clean];
-
-      if (!clean.startsWith("images/")) candidates.push(`images/${fileName}`);
-      if (!clean.startsWith("videos/")) candidates.push(`videos/${fileName}`);
+      const candidates = [fileName];
 
       return [...new Set(candidates)];
     }
@@ -1412,6 +1418,16 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
     });
 
     yesBtn.addEventListener("click", () => {
+      bgMusic.volume = 0.35;
+
+      const playPromise = bgMusic.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log("Background audio blocked:", err);
+        });
+      }
+
       modalWrap.style.display = "flex";
       setTimeout(resizeCanvas, 50);
     });
@@ -1470,7 +1486,7 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
 
       if (data.video) {
         withFallbackMedia(monthVideo, data.video);
-        monthVideo.muted = false;
+        monthVideo.muted = isIPhoneSafariLike();
         monthVideo.volume = 1;
         monthVideo.loop = true;
         monthVideo.playsInline = true;
@@ -1956,6 +1972,17 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
       wrap.appendChild(modal);
       document.body.appendChild(wrap);
       launchConfetti();
+    }
+
+    document.addEventListener("touchstart", unlockAudio, { once: true });
+
+    function unlockAudio() {
+      bgMusic.play()
+        .then(() => {
+          bgMusic.pause();
+          bgMusic.currentTime = 0;
+        })
+        .catch(() => {});
     }
 
     makeHearts();
