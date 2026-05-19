@@ -764,6 +764,58 @@ backdrop-filter: blur(15px);
     const loadingScreen = document.getElementById("loadingScreen");
     const loadingFill = document.getElementById("loadingFill");
 
+    const bgMusic = document.getElementById("bgMusic");
+const BG_VOLUME = 0.35;
+let backgroundWasPlaying = false;
+
+function fadeMedia(media, targetVolume, duration = 700, callback) {
+  clearInterval(media.fadeTimer);
+
+  const startVolume = media.volume;
+  const startTime = performance.now();
+
+  media.fadeTimer = setInterval(() => {
+    const progress = Math.min((performance.now() - startTime) / duration, 1);
+    media.volume = startVolume + (targetVolume - startVolume) * progress;
+
+    if (progress >= 1) {
+      clearInterval(media.fadeTimer);
+      media.volume = targetVolume;
+      if (callback) callback();
+    }
+  }, 30);
+}
+
+function fadeOutBackgroundForVideo(video) {
+  backgroundWasPlaying = !bgMusic.paused;
+
+  if (backgroundWasPlaying) {
+    fadeMedia(bgMusic, 0, 700, () => bgMusic.pause());
+  }
+
+  video.muted = false;
+  video.volume = 0;
+  fadeMedia(video, 1, 700);
+}
+
+function fadeInBackgroundAfterVideo(video) {
+  fadeMedia(video, 0, 500);
+
+  if (backgroundWasPlaying) {
+    bgMusic.volume = 0;
+    bgMusic.play().then(() => {
+      fadeMedia(bgMusic, BG_VOLUME, 700);
+    }).catch(() => {});
+  }
+}
+
+function attachVideoAudioFade(video) {
+  video.addEventListener("play", () => fadeOutBackgroundForVideo(video));
+  video.addEventListener("pause", () => fadeInBackgroundAfterVideo(video));
+  video.addEventListener("ended", () => fadeInBackgroundAfterVideo(video));
+}
+
+
     const monthData = [
       {
         title: "Month 1 — The Start 💗",
@@ -1043,11 +1095,9 @@ so no im not giving up on u or us bro. not now cus i LOVE YOU SO FUCKINGG MUCH N
 
     yesBtn.addEventListener("click", () => {
 
-      const bgMusic = document.getElementById("bgMusic");
-
-bgMusic.volume = 0.35;
-
+      bgMusic.volume = BG_VOLUME;
 bgMusic.play().catch(() => {});
+
       modalWrap.style.display = "flex";
       setTimeout(resizeCanvas, 50);
     });
@@ -1105,7 +1155,9 @@ bgMusic.play().catch(() => {});
         if (data.video) {
           monthVideo.src = normalizeMediaPath(data.video);
 
-          monthVideo.muted = true;
+          monthVideo.muted = false;
+          monthVideo.volume = 0;
+
           monthVideo.loop = true;
           monthVideo.playsInline = true;
           monthVideo.style.display = "block";
@@ -1114,6 +1166,12 @@ bgMusic.play().catch(() => {});
           monthVideo.currentTime = 0;
           monthVideo.load();
           monthVideo.play().catch(() => {});
+          if (!monthVideo.dataset.fadeReady) {
+  attachVideoAudioFade(monthVideo);
+  monthVideo.dataset.fadeReady = "true";
+}
+
+
 
           monthImage.style.display = "none";
           monthImage.removeAttribute("src");
@@ -1233,8 +1291,13 @@ if (data.voiceMessage) {
           vid.controls = true;
           vid.preload = "metadata";
           vid.src = normalized;
-          vid.setAttribute("playsinline", "");
-          wrap.appendChild(vid);
+vid.setAttribute("playsinline", "");
+vid.preload = "metadata";
+vid.addEventListener("play", () => fadeOutBackgroundForVideo(vid));
+vid.addEventListener("pause", () => fadeInBackgroundAfterVideo(vid));
+vid.addEventListener("ended", () => fadeInBackgroundAfterVideo(vid));
+wrap.appendChild(vid);
+
         } else {
           const img = document.createElement("img");
           img.className = "albumPhoto";
@@ -1327,7 +1390,10 @@ if (data.voiceMessage) {
         video.playsinline = true;
         video.muted = true;
         video.autoplay = true;
-        container.appendChild(video);
+video.volume = 0;
+attachVideoAudioFade(video);
+container.appendChild(video);
+
       }
     }
 
